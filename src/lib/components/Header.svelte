@@ -1,0 +1,79 @@
+<script lang="ts">
+	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers';
+	import { computation, ratecard, usage } from '$lib/stores/index';
+	import type { Computation, Rate, Usage } from '$lib/interfaces/index';
+	import { Indicator } from 'flowbite-svelte';
+	import { DarkMode } from 'flowbite-svelte';
+	import Logo from '$lib/components/Logo.svelte';
+
+	const accept = `text/csv`;
+	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
+
+	const change = async (e: null | EventTarget) => {
+		let files: FileList = (e as HTMLInputElement).files as FileList;
+		// await upload(files);
+		for (const file of files) {
+			const name = file.name.toLocaleLowerCase();
+			if (file.type === 'text/csv' && name.includes('ratecard')) {
+				const r = await parseRatecard(file);
+				if (r) ratecard.set(r);
+			} else if (file.type === 'text/csv' && name.includes('usage')) {
+				const u = await parseUsage(file);
+				if (u) usage.set(u);
+			} else if (file.type === 'text/csv' && name.includes('computation')) {
+				const c = await parseComputation(file);
+				if (c) computation.set(c);
+			} else {
+				alert(`incorect filename or type combo: ${file.name}, ${file.type}`);
+			}
+		}
+	};
+
+    // const upload = async (files: FileList) => {
+	// 	const body = new FormData();
+	// 	body.set('customer', 'KPN');
+	// 	for (const file of files) {
+	// 		console.log({ name: file.name, type: file.type });
+	// 		body.append(file.name, file);
+	// 	}
+	// 	const url = 'http://localhost:2000/oracle/upload';
+	// 	const response = await fetch(url, { method: 'POST', body });
+	// 	if (response.ok) {
+	// 		console.log('Success:', await response.json());
+	// 	} else console.error('Error:', response.statusText);
+	// };
+</script>
+
+<header class="w-full flex flex-row gap-4 items-center p-3">
+	<div class="w-10">
+		<Logo />
+	</div>
+	<div>
+		ratecard
+		{#if $ratecard.length > 0}
+			<Indicator class="inline-block" color="green" />
+		{:else}
+			<Indicator class="inline-block" color="red" />
+		{/if}
+	</div>
+	<div>
+		computation
+		{#if $computation.length > 0}
+			<Indicator class="inline-block" color="green" />
+		{:else}
+			<Indicator class="inline-block" color="red" />
+		{/if}
+	</div>
+	<div>
+		usage
+		{#if $usage.length > 0}
+			<Indicator class="inline-block" color="green" />
+		{:else}
+			<Indicator class="inline-block" color="red" />
+		{/if}
+	</div>
+	<div class="grow">
+		<input {accept} class="w-full" type="file" multiple on:change={(e) => change(e.target)} />
+	</div>
+	<DarkMode />
+</header>

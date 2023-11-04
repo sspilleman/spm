@@ -1,28 +1,34 @@
 <script lang="ts">
-	import type { Rate } from '../interfaces/index';
 	import { Input } from 'flowbite-svelte';
+	import { ratecard } from '$lib/stores/index';
 	import { SearchOutline } from 'flowbite-svelte-icons';
+	import type { Rate } from '$lib/interfaces/index';
 
-	export let ratecard: Rate[];
 	let ratecardFiltered: Rate[] = [];
 
 	const ratesearch = async (e: null | EventTarget) => {
 		if (ratecard) {
 			const txt = (e as HTMLInputElement).value;
 			if (txt.length === 0) ratecardFiltered = [];
-			else if (txt.toLocaleLowerCase() === `all`) ratecardFiltered = ratecard;
+			else if (txt.toLocaleLowerCase() === `all`) ratecardFiltered = $ratecard;
 			else {
 				const filter = (r: Rate) =>
 					JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
-				ratecardFiltered = ratecard.filter(filter);
+				ratecardFiltered = $ratecard.filter(filter);
 			}
 		}
 	};
 </script>
 
-<Input type="search" class="mt-4" placeholder="search" on:input={(e) => ratesearch(e.target)}>
+<svelte:head>
+	<title>Oracle | Ratecard</title>
+	<meta name="description" content="oracle ratecard" />
+</svelte:head>
+
+<Input type="search" placeholder="search" on:input={(e) => ratesearch(e.target)}>
 	<SearchOutline slot="left" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
 </Input>
+
 <table class="mt-4 font-mono text-sm">
 	<thead>
 		<tr>
