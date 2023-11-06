@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { ChartLineUpSolid, EuroSolid, ClipboardOutline } from 'flowbite-svelte-icons';
 	import { computation, ratecard, usage } from '$lib/stores/index';
-	import { parseSizing } from '$lib/parsers/sizing';
+	// import { parseSizing } from '$lib/parsers/sizing';
 	// import { utils, writeFile } from 'xlsx';
 	// import type { WorkSheet, WorkBook } from 'xlsx';
 
-	parseSizing();
+	// parseSizing();
 
 	// const test = () => {
 	// 	const wb: WorkBook = utils.book_new();
