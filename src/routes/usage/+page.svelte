@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Usage } from "$lib/interfaces/index";
   import { Button, Checkbox, Indicator } from "flowbite-svelte";
-  import Line from "../../lib/components/Line.svelte";
+  import Line from "../../lib/components/chart/Line.svelte";
   import { usage } from '$lib/stores/index';
   import type { PointOptionsObject } from "highcharts";
   import type Highcharts from "highcharts";
