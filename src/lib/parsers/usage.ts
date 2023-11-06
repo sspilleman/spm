@@ -12,7 +12,7 @@ type SourceColumns =
 const rowCoverter = (r: d3.DSVRowString<SourceColumns>) => {
   const pp = r["Product"].split(` - `);
   const [part, name] = [pp[0], pp.slice(1).join(` - `)];
-  console.log(r);
+//   console.log(r);
   return {
     "Product Name": cleanName(name),
     "Product Part": part,
