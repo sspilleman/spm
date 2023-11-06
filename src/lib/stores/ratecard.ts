@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
-import type { Rate } from "$lib/interfaces/index";
+import { writable } from 'svelte/store';
+import type { Rate } from '$lib/interfaces/index';
 
 // const c = localStorage.getItem("ratecard");
 // const value: Rate[] = c ? JSON.parse(c) : [];

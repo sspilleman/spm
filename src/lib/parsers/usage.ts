@@ -4,8 +4,6 @@ import * as d3 from "d3";
 import { cleanName } from "./helpers";
 
 type SourceColumns =
-  | "Active"
-  | "Ending Date"
   | "Product"
   | "Starting Date"
   | "UOM"
@@ -14,9 +12,8 @@ type SourceColumns =
 const rowCoverter = (r: d3.DSVRowString<SourceColumns>) => {
   const pp = r["Product"].split(` - `);
   const [part, name] = [pp[0], pp.slice(1).join(` - `)];
+  console.log(r);
   return {
-    "Active": r["Active"].toLocaleLowerCase() === "true" ? true : false,
-    "Ending Date": new Date(r["Ending Date"]).getTime(),
     "Product Name": cleanName(name),
     "Product Part": part,
     "Starting Date": new Date(r["Starting Date"]).getTime(),

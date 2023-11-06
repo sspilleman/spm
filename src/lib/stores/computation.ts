@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
-import type { Computation } from "$lib/interfaces/index";
+import { writable } from 'svelte/store';
+import type { Computation } from '$lib/interfaces/index';
 
 // const c = localStorage.getItem("computation");
 // const value: Computation[] = c ? JSON.parse(c) : [];

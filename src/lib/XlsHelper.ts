@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { read } from "xlsx";
-import type { WorkBook } from "xlsx";
+import { read } from 'xlsx';
+import type { WorkBook } from 'xlsx';
 // import type { Range, WorkBook, WorkSheet } from "xlsx";
 
 // interface Cell {
@@ -241,28 +241,28 @@ import type { WorkBook } from "xlsx";
 // }
 
 export function getWorkbook(binary: string) {
-  const workbook: WorkBook = read(binary, {
-    type: "binary",
-    cellText: false,
-    cellDates: true,
-    cellStyles: false,
-  });
-  //   const sheet = workbook.Sheets["Oracle PaaS and IaaS Price List"];
-  //   const sheet = workbook.Sheets[`Scenario 2`];
-  //   return sheet;
-  return workbook.Sheets;
-  //   const arr = sheet2arr(sheet);
-  //   return parse(arr);
+	const workbook: WorkBook = read(binary, {
+		type: 'binary',
+		cellText: false,
+		cellDates: true,
+		cellStyles: false
+	});
+	//   const sheet = workbook.Sheets["Oracle PaaS and IaaS Price List"];
+	//   const sheet = workbook.Sheets[`Scenario 2`];
+	//   return sheet;
+	return workbook.Sheets;
+	//   const arr = sheet2arr(sheet);
+	//   return parse(arr);
 }
 
 export function readFile(file: File): Promise<string> {
-  const fileReader = new FileReader();
-  return new Promise((resolve) => {
-    fileReader.onload = function (e: ProgressEvent<FileReader>) {
-      return resolve(e.target?.result as string);
-    };
-    fileReader.readAsBinaryString(file);
-  });
+	const fileReader = new FileReader();
+	return new Promise((resolve) => {
+		fileReader.onload = function (e: ProgressEvent<FileReader>) {
+			return resolve(e.target?.result as string);
+		};
+		fileReader.readAsBinaryString(file);
+	});
 }
 
 // function sheet2arr(sheet: WorkSheet) {
