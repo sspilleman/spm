@@ -1,13 +1,27 @@
 <script lang="ts">
-	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers';
+	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
+	import {
+		parseSampleRatecard,
+		parseSampleUsage,
+		parseSampleComputation
+	} from '$lib/parsers/index';
 	import { computation, ratecard, usage } from '$lib/stores/index';
-	import type { Computation, Rate, Usage } from '$lib/interfaces/index';
 	import { Indicator } from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import Logo from '$lib/components/Logo.svelte';
 
 	const accept = `text/csv`;
 	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
+
+	const load = async () => {
+		const c = await parseSampleComputation();
+		if (c) computation.set(c);
+		const r = await parseSampleRatecard();
+		if (r) ratecard.set(r);
+		const u = await parseSampleUsage();
+		if (u) usage.set(u);
+	};
+	load();
 
 	const change = async (e: null | EventTarget) => {
 		let files: FileList = (e as HTMLInputElement).files as FileList;
@@ -29,9 +43,9 @@
 		}
 	};
 
-    // const upload = async (files: FileList) => {
+	// const upload = async (files: FileList) => {
 	// 	const body = new FormData();
-	// 	body.set('customer', 'KPN');
+	// 	body.set('customer', 'customer');
 	// 	for (const file of files) {
 	// 		console.log({ name: file.name, type: file.type });
 	// 		body.append(file.name, file);

@@ -1,38 +1,29 @@
 <script lang="ts">
 	import { ChartLineUpSolid, EuroSolid, ClipboardOutline } from 'flowbite-svelte-icons';
 	import { computation, ratecard, usage } from '$lib/stores/index';
+	import { parseSizing } from '$lib/parsers/sizing';
+	// import { utils, writeFile } from 'xlsx';
+	// import type { WorkSheet, WorkBook } from 'xlsx';
 
-	// $: if (ratecard && usage) {
-	// 	for (const usagerecord of usage) {
-	// 		const idx = ratecard.findIndex(
-	// 			(rate) => usagerecord['Product Part'] === rate['Product Part']
-	// 		);
-	// 		if (idx === -1) console.log('missing', usagerecord);
-	// 	}
-	// 	console.log('im here');
-	// }
+	parseSizing();
 
-	// const upload = async (files: FileList) => {
-	// 	const body = new FormData();
-	// 	body.set('customer', 'KPN');
-	// 	for (const file of files) {
-	// 		console.log({ name: file.name, type: file.type });
-	// 		body.append(file.name, file);
-	// 	}
-	// 	const url = 'http://localhost:2000/oracle/upload';
-	// 	const response = await fetch(url, { method: 'POST', body });
-	// 	if (response.ok) {
-	// 		console.log('Success:', await response.json());
-	// 	} else console.error('Error:', response.statusText);
+	// const test = () => {
+	// 	const wb: WorkBook = utils.book_new();
+	// 	const ws: WorkSheet = utils.aoa_to_sheet([
+	// 		['A', 'B', 'C'],
+	// 		[1, 2, { t: 'n', f: 'SUM(A2:B2)' }],
+	// 		[3, 4, { t: 'n', f: 'A3+B3' }]
+	// 	]);
+	// 	utils.book_append_sheet(wb, ws, 'Sheet1');
+	// 	writeFile(wb, 'formulae.xlsx', { compression: true });
 	// };
+	// test();
 </script>
 
 <svelte:head>
 	<title>Oracle | Home</title>
 	<meta name="description" content="oracle home" />
 </svelte:head>
-
-
 
 <section class="mt-24 flex flex-row gap-4 w-full justify-center">
 	{#if $ratecard.length > 0}

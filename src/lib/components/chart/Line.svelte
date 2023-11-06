@@ -1,5 +1,4 @@
 <script lang="ts">
-	import './highcharts.css';
 	import Chart from './Chart.svelte';
 	import merge from 'lodash.merge';
 	import type Highcharts from 'highcharts';
