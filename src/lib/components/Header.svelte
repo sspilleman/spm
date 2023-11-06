@@ -9,13 +9,15 @@
 	import { Indicator } from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import Logo from '$lib/components/Logo.svelte';
+	import { HomeOutline } from 'flowbite-svelte-icons';
+
 
 	const accept = `text/csv`;
 	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
 
 	const load = async () => {
-		// const c = await parseSampleComputation();
-		// if (c) computation.set(c);
+		const c = await parseSampleComputation();
+		if (c) computation.set(c);
 		const r = await parseSampleRatecard();
 		if (r) ratecard.set(r);
 		const u = await parseSampleUsage();
@@ -62,6 +64,13 @@
 	<div class="w-10">
 		<Logo />
 	</div>
+	<div class="mr-16 flex flex-row gap-4">
+		<a href="/" class="">Home</a>
+		<a href="/computation" class="">Computation</a>
+		<a href="/ratecard" class="">Ratecard</a>
+		<a href="/usage" class="">Usage</a>
+	</div>
+	<div class="text-white">loaded:</div>
 	<div>
 		ratecard
 		{#if $ratecard.length > 0}
@@ -70,14 +79,14 @@
 			<Indicator class="inline-block" color="red" />
 		{/if}
 	</div>
-	<!-- <div>
+	<div>
 		computation
 		{#if $computation.length > 0}
 			<Indicator class="inline-block" color="green" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
 		{/if}
-	</div> -->
+	</div>
 	<div>
 		usage
 		{#if $usage.length > 0}

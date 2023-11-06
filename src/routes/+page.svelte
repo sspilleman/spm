@@ -29,7 +29,7 @@
 	{#if $ratecard.length > 0}
 		<a
 			href="/ratecard"
-			class="w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
+			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
 				<ClipboardOutline class="outline-none h-28 w-16 text-primary-600"></ClipboardOutline>
@@ -40,7 +40,7 @@
 	{#if $usage.length > 0}
 		<a
 			href="/usage"
-			class="w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
+			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
 				<ChartLineUpSolid class="outline-none h-28 w-16 text-primary-600"></ChartLineUpSolid>
@@ -51,7 +51,7 @@
 	{#if $computation.length > 1}
 		<a
 			href="/computation"
-			class="w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
+			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
 				<EuroSolid class="outline-none h-28 w-16 text-primary-600"></EuroSolid>
@@ -62,7 +62,7 @@
 </section>
 
 <style>
-	.w-48 {
-		transition: background-color 1s ease;
+	.button {
+		transition: background-color 0.5s ease;
 	}
 </style>

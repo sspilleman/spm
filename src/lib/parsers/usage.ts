@@ -23,7 +23,7 @@ const rowCoverter = (r: d3.DSVRowString<SourceColumns>) => {
 };
 
 export const parseSampleUsage = async (): Promise<d3.DSVParsedArray<Usage>> => {
-  const url = "/usage.csv";
+  const url = "https://s3.spilleman.nl/shared/usage.csv";
   const rows = await d3.csv(url, rowCoverter);
   rows.pop();
   return rows;
