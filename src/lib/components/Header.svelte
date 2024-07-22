@@ -16,12 +16,12 @@
 	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
 
 	const load = async () => {
-		const c = await parseSampleComputation();
-		if (c) computation.set(c);
-		const r = await parseSampleRatecard();
-		if (r) ratecard.set(r);
-		const u = await parseSampleUsage();
-		if (u) usage.set(u);
+		// const c = await parseSampleComputation();
+		// if (c) computation.set(c);
+		// const r = await parseSampleRatecard();
+		// if (r) ratecard.set(r);
+		// const u = await parseSampleUsage();
+		// if (u) usage.set(u);
 	};
 	load();
 
