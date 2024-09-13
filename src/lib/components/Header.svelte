@@ -75,7 +75,7 @@
 	<div>
 		ratecard
 		{#if $ratecard?.length > 0}
-			<Indicator class="inline-block" color="green" />
+			<Indicator class="inline-block bg-lightgreen" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
 		{/if}
@@ -83,7 +83,7 @@
 	<div>
 		computation
 		{#if $computation?.length > 0}
-			<Indicator class="inline-block" color="green" />
+			<Indicator class="inline-block bg-lightgreen" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
 		{/if}
@@ -91,7 +91,7 @@
 	<div>
 		usage
 		{#if $usage?.length > 0}
-			<Indicator class="inline-block" color="green" />
+			<Indicator class="inline-block bg-lightgreen" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
 		{/if}

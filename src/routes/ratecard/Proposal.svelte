@@ -101,5 +101,5 @@
 			</tr>
 		</tbody>
 	</table>
-	<Button on:click={xlsx}>export to xls</Button>
+	<Button on:click={xlsx} size="sm" outline color="green"><img class="w-6 h-6 me-2" src="./excel.svg" alt="" />export to xls</Button>
 {/if}
