@@ -10,12 +10,12 @@
 	<meta name="description" content="oracle ratecard" />
 </svelte:head>
 
-{#if $quotes?.length > 0}
+{#if $quotes && $quotes.length > 0}
 	<Heading tag="h2" customSize="my-4 text-4xl font-extrabold">Proposal</Heading>
 	<Proposal></Proposal>
 {/if}
 
-{#if $ratecard?.length}
+{#if $ratecard && $ratecard.length}
 	<Heading tag="h2" customSize="my-4 text-4xl font-extrabold">Lookup</Heading>
 	<Table></Table>
 {/if}

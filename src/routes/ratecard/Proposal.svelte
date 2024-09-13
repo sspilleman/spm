@@ -32,10 +32,10 @@
 	};
 
 	const xlsx = () => exportToXls(lines);
-	$: if ($quotes?.length >= 0 && $ratecard?.length >= 0) recalculate();
+	$: if ($quotes && $quotes.length >= 0 && $ratecard && $ratecard.length >= 0) recalculate();
 </script>
 
-{#if $quotes?.length > 0}
+{#if $quotes && $quotes.length > 0}
 	<table class="font-mono text-xs">
 		<thead>
 			<tr>
