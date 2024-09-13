@@ -62,7 +62,7 @@
 </script>
 
 <header class="w-full flex flex-row gap-4 items-center p-3">
-	<div class="w-10">
+	<!-- <div class="w-10">
 		<Logo />
 	</div>
 	<div class="mr-16 flex flex-row gap-4">
@@ -98,6 +98,6 @@
 	</div>
 	<div class="grow">
 		<input {accept} class="w-full" type="file" multiple on:change={(e) => change(e.target)} />
-	</div>
+	</div> -->
 	<DarkMode />
 </header>
