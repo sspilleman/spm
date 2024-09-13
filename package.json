@@ -22,7 +22,7 @@
 		"@types/lodash.merge": "^4.6.8",
 		"@typescript-eslint/eslint-plugin": "^6.9.1",
 		"@typescript-eslint/parser": "^6.9.1",
-		"autoprefixer": "^10.4.16",
+		"autoprefixer": "^10.4.20",
 		"d3": "^7.8.5",
 		"dexie": "^4.0.8",
 		"eslint": "^8.53.0",
@@ -41,15 +41,12 @@
 		"svelte": "^4.2.2",
 		"svelte-check": "^3.5.2",
 		"sveltekit-adapter-deno": "^0.11.3",
-		"tailwindcss": "^3.3.5",
+		"tailwindcss": "^3.4.11",
 		"tslib": "^2.6.2",
 		"typescript": "^5.2.2",
 		"vite": "^4.5.0",
 		"vitest": "^0.34.6",
-		"xlsx": "^0.18.5",
-		"xlsx-pro": "^0.14.5",
-		"xlsx-style": "^0.8.13",
-		"xlsx-style-pro": "^0.8.13"
+		"xlsx": "^0.18.5"
 	},
 	"type": "module"
 }
