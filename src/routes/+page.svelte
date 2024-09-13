@@ -1,23 +1,7 @@
 <script lang="ts">
 	import { ChartLineUpSolid, EuroSolid, ClipboardOutline } from 'flowbite-svelte-icons';
-	import { computation, ratecard, usage } from '$lib/stores/index';
-	// import { parseSizing } from '$lib/parsers/sizing';
-	// import { utils, writeFile } from 'xlsx';
-	// import type { WorkSheet, WorkBook } from 'xlsx';
-
-	// parseSizing();
-
-	// const test = () => {
-	// 	const wb: WorkBook = utils.book_new();
-	// 	const ws: WorkSheet = utils.aoa_to_sheet([
-	// 		['A', 'B', 'C'],
-	// 		[1, 2, { t: 'n', f: 'SUM(A2:B2)' }],
-	// 		[3, 4, { t: 'n', f: 'A3+B3' }]
-	// 	]);
-	// 	utils.book_append_sheet(wb, ws, 'Sheet1');
-	// 	writeFile(wb, 'formulae.xlsx', { compression: true });
-	// };
-	// test();
+	import { computation } from '$lib/stores/computation';
+	import { ratecard,usage } from '$lib/db';
 </script>
 
 <svelte:head>

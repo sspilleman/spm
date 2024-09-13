@@ -1,25 +1,26 @@
 <script lang="ts">
+	import { ratecard, db } from '$lib/db';
 	import { Input } from 'flowbite-svelte';
-	import { ratecard } from '$lib/stores/index';
 	import { uomMultiplier } from '$lib/parsers/helpers';
 	import { SearchOutline, CirclePlusOutline } from 'flowbite-svelte-icons';
 	import type { Rate } from '$lib/interfaces/index';
-	import { createEventDispatcher } from 'svelte';
 
-	let ratecardFiltered: Rate[];
-	const add = createEventDispatcher();
+	let ratecardFiltered: Rate[] = [];
+
+	const addProduct = async (rate: Rate) => {
+		const count = await db.quotes.where('id').equals(rate['id']).count();
+		if (count) return alert(`${rate['Product Name']} aleady added`);
+		const quote = { id: rate.id, part: rate['Product Part'], quantity: 1 };
+		await db.quotes.add(quote);
+	};
 
 	const ratesearch = async (e: null | EventTarget) => {
-		// if (txt.length === 0) ratecardFiltered = [];
-		// else if (txt.toLocaleLowerCase() === `all`) ratecardFiltered = $ratecard;
-		if (ratecard) {
-			const txt = (e as HTMLInputElement).value;
-			if (txt.length === 0) ratecardFiltered = $ratecard;
-			else {
-				const filter = (r: Rate) =>
-					JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
-				ratecardFiltered = $ratecard.filter(filter);
-			}
+		const txt = (e as HTMLInputElement).value;
+		if (txt.length === 0) ratecardFiltered = $ratecard;
+		else {
+			const filter = (r: Rate) =>
+				JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
+			ratecardFiltered = $ratecard.filter(filter);
 		}
 	};
 
@@ -47,8 +48,8 @@
 			{@const quantity = !Number.isNaN(rate['Max Quantity']) ? rate['Max Quantity'] : ''}
 			{@const multiplier = uomMultiplier(rate['UOM'])}
 			<tr>
-				<td class="px-2" on:click={() => add('add', rate)}
-					><CirclePlusOutline class="outline-none w-5 h-5 text-green-500" /></td
+				<td class="px-2" on:click={() => addProduct(rate)}
+					><CirclePlusOutline class="outline-none w-5 h-5 text-lightgreen" /></td
 				>
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Product Part']}</td>
 				<td class="px-2">{rate['Product Name']}</td>
