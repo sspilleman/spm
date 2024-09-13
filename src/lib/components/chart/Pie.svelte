@@ -6,7 +6,7 @@
 	export let options: Highcharts.Options;
 
 	let pointFormatter: Highcharts.FormatterCallbackFunction<Highcharts.Point> = function () {
-		console.log(this);
+		// console.log(this);
 		const color = this.graphic?.element.classList[1];
 		const style = `color: var(--${color})`;
 		const value = this.y?.toFixed(1);

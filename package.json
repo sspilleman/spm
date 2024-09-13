@@ -24,6 +24,7 @@
 		"@typescript-eslint/parser": "^6.9.1",
 		"autoprefixer": "^10.4.16",
 		"d3": "^7.8.5",
+		"dexie": "^4.0.8",
 		"eslint": "^8.53.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-svelte": "^2.35.0",
@@ -45,7 +46,10 @@
 		"typescript": "^5.2.2",
 		"vite": "^4.5.0",
 		"vitest": "^0.34.6",
-		"xlsx": "^0.18.5"
+		"xlsx": "^0.18.5",
+		"xlsx-pro": "^0.14.5",
+		"xlsx-style": "^0.8.13",
+		"xlsx-style-pro": "^0.8.13"
 	},
 	"type": "module"
 }

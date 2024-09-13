@@ -1,11 +1,10 @@
 <script lang="ts">
 	import type { Usage } from '$lib/interfaces/index';
-	import { Button, Checkbox, Indicator } from 'flowbite-svelte';
-	import Line from '../../lib/components/chart/Line.svelte';
-	import { usage } from '$lib/stores/index';
+	import { Button, Checkbox } from 'flowbite-svelte';
+	import Line from '$lib/components/chart/Line.svelte';
+	import { usage } from '$lib/db';
 	import type { PointOptionsObject } from 'highcharts';
 	import type Highcharts from 'highcharts';
-	// import { format } from 'date-fns';
 
 	let charts: Highcharts.Options[];
 	let [parts, parts_selected]: [string[], string[]] = [[], []];
@@ -74,7 +73,7 @@
 		return splitted.join(' - ');
 	};
 
-	$: if ($usage.length > 0) createParts($usage);
+	$: if ($usage?.length > 0) createParts($usage);
 	$: if (parts.length > 0) createCharts();
 </script>
 

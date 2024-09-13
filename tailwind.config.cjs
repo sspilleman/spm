@@ -37,7 +37,12 @@ const config = {
 					800: '#FF339F',
 					900: '#FF1A93'
 				},
-				secondary: '#009EFF'
+				secondary: '#009EFF',
+				poppy: '#D64045FF',
+				marianblue: '#324376FF',
+				verdigris: '#7EBDC2FF',
+				lightgreen: '#93FF96FF',
+				orangeweb: '#FCAB10FF'
 			}
 		}
 	}

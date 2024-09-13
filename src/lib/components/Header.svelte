@@ -1,29 +1,23 @@
 <script lang="ts">
 	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
-	import {
-		parseSampleRatecard,
-		parseSampleUsage,
-		parseSampleComputation
-	} from '$lib/parsers/index';
-	import { computation, ratecard, usage } from '$lib/stores/index';
+	import { computation } from '$lib/stores/computation';
+	import { usage, ratecard, db } from '$lib/db';
 	import { Indicator } from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import Logo from '$lib/components/Logo.svelte';
-	import { HomeOutline } from 'flowbite-svelte-icons';
-
 
 	const accept = `text/csv`;
 	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
 
-	const load = async () => {
-		// const c = await parseSampleComputation();
-		// if (c) computation.set(c);
-		// const r = await parseSampleRatecard();
-		// if (r) ratecard.set(r);
-		// const u = await parseSampleUsage();
-		// if (u) usage.set(u);
-	};
-	load();
+	// const load = async () => {
+	// 	const c = await parseSampleComputation();
+	// 	if (c) computation.set(c);
+	// 	const r = await parseSampleRatecard();
+	// 	if (r) ratecard.set(r);
+	// 	const u = await parseSampleUsage();
+	// 	if (u) usage.set(u);
+	// };
+	// load();
 
 	const change = async (e: null | EventTarget) => {
 		let files: FileList = (e as HTMLInputElement).files as FileList;
@@ -32,10 +26,17 @@
 			const name = file.name.toLocaleLowerCase();
 			if (file.type === 'text/csv' && name.includes('ratecard')) {
 				const r = await parseRatecard(file);
-				if (r) ratecard.set(r);
+				// if (r) ratecard.set(r);
+				if (r) {
+					await db.rates.clear();
+					await db.rates.bulkAdd(r);
+				}
 			} else if (file.type === 'text/csv' && name.includes('usage')) {
 				const u = await parseUsage(file);
-				if (u) usage.set(u);
+				if (u) {
+					await db.usage.clear();
+					await db.usage.bulkAdd(u);
+				}
 			} else if (file.type === 'text/csv' && name.includes('computation')) {
 				const c = await parseComputation(file);
 				if (c) computation.set(c);
@@ -73,7 +74,7 @@
 	<div class="text-white">loaded:</div>
 	<div>
 		ratecard
-		{#if $ratecard.length > 0}
+		{#if $ratecard?.length > 0}
 			<Indicator class="inline-block" color="green" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
@@ -81,7 +82,7 @@
 	</div>
 	<div>
 		computation
-		{#if $computation.length > 0}
+		{#if $computation?.length > 0}
 			<Indicator class="inline-block" color="green" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
@@ -89,7 +90,7 @@
 	</div>
 	<div>
 		usage
-		{#if $usage.length > 0}
+		{#if $usage?.length > 0}
 			<Indicator class="inline-block" color="green" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
