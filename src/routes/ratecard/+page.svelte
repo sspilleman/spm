@@ -21,10 +21,7 @@
 	}
 
 	let lines: Line[];
-	let quotes: Quote[] = [
-		{ id: 310, part: 'B93113', quantity: 4 },
-		{ id: 311, part: 'B93114', quantity: 64 }
-	];
+	let quotes: Quote[] = [{ id: 310, part: 'B93113', quantity: 4 }];
 	let tpm: number;
 
 	const addProduct = (e: CustomEvent) => {
@@ -44,14 +41,15 @@
 	};
 
 	const removeProduct = (line: Line) => {
+		console.log(quotes);
 		quotes = quotes.filter((q) => q.id !== line.id);
+		console.log(quotes);
 	};
 
 	const changeProduct = (line: any, e: undefined | KeyboardEvent = undefined) => {
 		if (e && e.key !== 'Enter') return;
 		const quote = quotes.find((q) => q.id === line.id) as Quote;
 		quote.quantity = line.quantity;
-		// console.log('quote', quote);
 		quotes = [...quotes];
 	};
 
@@ -66,24 +64,16 @@
 				ppm: q.quantity * uomMultiplier(rate?.UOM) * rate['Net Unit Price']
 			});
 		});
-		tpm = lines.map((a) => a.ppm).reduce((a, b) => a + b);
+		tpm = lines.length > 0 ? lines.map((a) => a.ppm).reduce((a, b) => a + b) : 0;
 	};
 
-	$: if (quotes.length && $ratecard.length) recalculate();
+	$: if (quotes && $ratecard.length) recalculate();
 </script>
 
 <svelte:head>
 	<title>Oracle | Ratecard</title>
 	<meta name="description" content="oracle ratecard" />
 </svelte:head>
-
-<!-- <input
-	class="py-0 pl-1 pr-0 m-0 font-mono text-sm border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-500"
-	type="number"
-	min="0"
-	max="999999999"
-	value={1000}
-/> -->
 
 {#if $ratecard.length}
 	<Heading tag="h2" customSize="my-4 text-4xl font-extrabold">Proposal</Heading>
