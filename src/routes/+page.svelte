@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChartLineUpSolid, EuroSolid, ClipboardOutline } from 'flowbite-svelte-icons';
+	import { ChartLineUpOutline, EuroOutline, ClipboardOutline } from 'flowbite-svelte-icons';
 	import { computation } from '$lib/stores/computation';
 	import { ratecard, usage } from '$lib/db';
 </script>
@@ -27,7 +27,7 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<ChartLineUpSolid class="outline-none h-28 w-16 text-primary-600"></ChartLineUpSolid>
+				<ChartLineUpOutline class="outline-none h-28 w-16 text-primary-600"></ChartLineUpOutline>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">usage</div>
 		</a>
@@ -38,7 +38,7 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<EuroSolid class="outline-none h-28 w-16 text-primary-600"></EuroSolid>
+				<EuroOutline class="outline-none h-28 w-16 text-primary-600"></EuroOutline>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">computation</div>
 		</a>

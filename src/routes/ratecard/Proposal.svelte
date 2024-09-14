@@ -3,7 +3,7 @@
 	import { uomMultiplier } from '$lib/parsers/helpers';
 	import { Heading, Button } from 'flowbite-svelte';
 	import type { Rate, Quote, Line } from '$lib/interfaces/index';
-	import { CheckSolid, EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
+	import { CheckOutline, EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
 	// import { exportToXls } from './xlsx';
 	import { exportToXls } from './exceljs';
 	let lines: Line[];
@@ -62,10 +62,10 @@
 					<td class="px-2 font-semibold text-black dark:text-white">{line?.rate}</td>
 					{#if line.editing}
 						<td class="px-2 flex flex-row gap-2 items-center">
-							<CheckSolid
+							<CheckOutline
 								class="cursor-pointer outline-none w-4 h-4 text-green-500"
 								on:click={() => changeProduct(line)}
-							></CheckSolid>
+							></CheckOutline>
 							<input
 								class="py-0 pl-1 pr-0 m-0 font-mono text-xs border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-500"
 								type="number"
