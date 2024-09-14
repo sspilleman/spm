@@ -4,7 +4,8 @@
 	import { Heading, Button } from 'flowbite-svelte';
 	import type { Rate, Quote, Line } from '$lib/interfaces/index';
 	import { CheckSolid, EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
-	import { exportToXls } from './xlsx';
+	// import { exportToXls } from './xlsx';
+	import { exportToXls } from './exceljs';
 	let lines: Line[];
 	let tpm: number;
 	const recalculate = () => {

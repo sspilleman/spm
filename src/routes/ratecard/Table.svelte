@@ -52,6 +52,7 @@
 					><CirclePlusOutline class="outline-none w-5 h-5 text-lightgreen" /></td
 				>
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Product Part']}</td>
+				<!-- <td class="px-2">{cleanName(rate['Product Name'], rate['UOM'])}</td> -->
 				<td class="px-2">{rate['Product Name']}</td>
 				<td class="px-2">{rate['UOM']}</td>
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Net Unit Price']}</td>

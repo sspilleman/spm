@@ -38,7 +38,7 @@ const config = {
 					900: '#FF1A93'
 				},
 				secondary: '#009EFF',
-				poppy: '#D64045FF',
+				poppy: '#FF0051FF',
 				marianblue: '#324376FF',
 				verdigris: '#7EBDC2FF',
 				lightgreen: '#93FF96FF',
