@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Table from './Table.svelte';
 	import Proposal from './Proposal.svelte';
-	import { ratecard, quotes, db } from '$lib/db';
+	import { ratecard, quotes } from '$lib/db';
 	import { Heading } from 'flowbite-svelte';
 </script>
 
