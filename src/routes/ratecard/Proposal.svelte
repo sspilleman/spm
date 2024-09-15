@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { ratecard, quotes, db } from '$lib/db';
 	import { uomMultiplier } from '$lib/parsers/helpers';
-	import { Heading, Button } from 'flowbite-svelte';
-	import type { Rate, Quote, Line } from '$lib/interfaces/index';
+	import { Button } from 'flowbite-svelte';
+	import type { Rate, Line } from '$lib/interfaces/index';
 	import { CheckOutline, EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
 	// import { exportToXls } from './xlsx';
 	import { exportToXls } from './exceljs';
@@ -27,7 +27,7 @@
 		await db.quotes.delete(line.id);
 	};
 
-	const changeProduct = async (line: any, e: undefined | KeyboardEvent = undefined) => {
+	const changeProduct = async (line: Line, e: undefined | KeyboardEvent = undefined) => {
 		if (e && e.key !== 'Enter') return;
 		await db.quotes.update(line.id, { quantity: line.quantity });
 	};
@@ -102,5 +102,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<Button on:click={xlsx} size="sm" outline color="green"><img class="w-6 h-6 me-2" src="./excel.svg" alt="" />export to xls</Button>
+	<Button on:click={xlsx} size="sm" outline color="green"
+		><img class="w-6 h-6 me-2" src="./excel.svg" alt="" />export to xls</Button
+	>
 {/if}
