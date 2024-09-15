@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Line } from "$lib/interfaces/index";
 import Excel, { type Row, type Workbook, type Worksheet } from "exceljs";
 import { cleanName } from "$lib/utils";
