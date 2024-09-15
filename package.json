@@ -54,7 +54,7 @@
 	"type": "module",
 	"overrides": {
 		"exceljs": {
-			"crypto": "node:crypto"
+			"crypto": "^1.0.1"
 		}
 	}
 }
