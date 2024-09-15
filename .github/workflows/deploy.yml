@@ -35,5 +35,6 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: 'spm'
-          entrypoint: 'mod.ts' # 📝 Update the entrypoint if necessary
+          # entrypoint: 'mod.ts' # 📝 Update the entrypoint if necessary
+          entrypoint: 'index.js' # 📝 Update the entrypoint if necessary
           root: 'build' # 📝 Update the root if necessary
