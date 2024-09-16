@@ -1,11 +1,9 @@
-import type { Usage } from '$lib/interfaces/index';
+import type { Usage, UsageSourceColumns } from '$lib/interfaces/index';
 import { readFile } from '$lib/utils';
 import * as d3 from 'd3';
 import { cleanName } from './helpers';
 
-type SourceColumns = 'Product' | 'Starting Date' | 'UOM' | 'Usage Quantity';
-
-const rowCoverter = (r: d3.DSVRowString<SourceColumns>) => {
+const rowCoverter = (r: d3.DSVRowString<UsageSourceColumns>) => {
 	const pp = r['Product'].split(` - `);
 	const [part, name] = [pp[0], pp.slice(1).join(` - `)];
 	//   console.log(r);
@@ -16,13 +14,6 @@ const rowCoverter = (r: d3.DSVRowString<SourceColumns>) => {
 		'Usage Quantity': parseFloat(r['Usage Quantity']),
 		UOM: r['UOM']
 	} as Usage;
-};
-
-export const parseSampleUsage = async (): Promise<d3.DSVParsedArray<Usage>> => {
-	const url = 'https://s3.spilleman.nl/shared/usage.csv';
-	const rows = await d3.csv(url, rowCoverter);
-	rows.pop();
-	return rows;
 };
 
 export const parseUsage = async (file: File) => {

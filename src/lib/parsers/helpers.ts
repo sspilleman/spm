@@ -1,5 +1,5 @@
 export const parseMDYDate = (value: string) => {
-	const date = new Date('1972-09-10T00:00:00');
+	const date = new Date('1972-09-10T02:00:00');
 	const r = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
 	if (r && r.length === 4) {
 		date.setDate(parseInt(r[2], 10));
@@ -9,11 +9,22 @@ export const parseMDYDate = (value: string) => {
 	return date;
 };
 
+export const parseYMDDate = (value: string) => {
+	const date = new Date('1972-09-10T02:00:00');
+	const r = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+	if (r && r.length === 4) {
+		date.setDate(parseInt(r[3], 10));
+		date.setMonth(parseInt(r[2], 10) - 1);
+		date.setFullYear(parseInt(r[1], 10));
+	}
+	return date;
+};
+
 export const cleanName = (value: string) =>
 	value
-		.replace(/Oracle Cloud Infrastructure - /, '')
-		.replace(/Oracle Cloud Infrastructure /, '')
-		.replace(/Oracle /, '');
+		.replace(/^Oracle Cloud Infrastructure *-* */, '')
+		.replace(/^Cloud Infrastructure *-* */, '')
+		.replace(/^Oracle /, '');
 
 export const splitValues = (line: string) => {
 	const result: string[] = [];

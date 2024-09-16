@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Usage } from '$lib/interfaces/index';
-	import { Button, Checkbox } from 'flowbite-svelte';
+	import { Button, Label } from 'flowbite-svelte';
 	import Line from '$lib/components/chart/Line.svelte';
 	import { usage } from '$lib/db';
 	import type { PointOptionsObject } from 'highcharts';
@@ -14,27 +14,15 @@
 			if ($usage) {
 				const data: PointOptionsObject[] = $usage
 					.filter((u) => u['Product Name'] === part)
-					.sort((a, b) => a['Starting Date'] - b['Starting Date'])
+					.sort((a, b) => b['Starting Date'] - a['Starting Date'])
 					.map((u) => [u['Starting Date'], u['Usage Quantity']]);
+				console.log(data);
 				prev.push({
-					title: {
-						text: part,
-						style: {
-							color: 'rgb(255 75 170 / var(--tw-text-opacity))'
-						}
-					},
+					title: { text: part },
 					xAxis: { type: 'datetime' },
 					yAxis: { title: { text: 'Quantity' } },
-					legend: {
-						enabled: false
-					},
-					series: [
-						{
-							type: 'line',
-							name: part,
-							data
-						}
-					]
+					legend: { enabled: false },
+					series: [{ type: 'line', name: part, data }]
 				});
 			}
 			return prev;
@@ -42,11 +30,10 @@
 		// console.log(charts);
 	};
 
-	const createParts = (usage: Usage[]) => {
-		parts = [...new Set(usage.map((s) => s['Product Name']))].filter(
+	const createParts = () => {
+		parts = [...new Set($usage.map((s) => s['Product Name']))].filter(
 			(s) => s.toLocaleLowerCase() // .includes('database')
 		);
-		// parts_selected = [...parts];
 	};
 
 	const findChanged = (days: number) => {
@@ -68,12 +55,12 @@
 	};
 
 	const cleanName = (str: string) => {
-		const splitted = str.split(' - ');
-		splitted.pop();
-		return splitted.join(' - ');
+		const splitted = str.split('-');
+		if (splitted.length > 1) splitted.pop();
+		return splitted.map((s) => s.trim()).join(' - ');
 	};
 
-	$: if ($usage?.length > 0) createParts($usage);
+	$: if ($usage?.length > 0) createParts();
 	$: if (parts.length > 0) createCharts();
 </script>
 
@@ -95,11 +82,18 @@
 	<ul class="mt-4 flex flex-row flex-wrap">
 		{#each parts as part (part)}
 			<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600 w-96">
-				<Checkbox bind:group={parts_selected} value={part}>{cleanName(part)}</Checkbox>
-				<!-- <div class="flex flex-row">
-          <Checkbox bind:group={parts_selected} value={part}></Checkbox>
-          <span class="text-xs">{part}</span>
-        </div> -->
+				<!-- <Checkbox bind:group={parts_selected} value={part}>{cleanName(part)}</Checkbox> -->
+				<Label
+					class="text-sm rtl:text-right font-medium text-gray-900 dark:text-gray-300 flex items-center"
+				>
+					<input
+						bind:group={parts_selected}
+						type="checkbox"
+						value={part}
+						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lightgreen focus:ring-lightgreen dark:focus:ring-lightgreen"
+					/>
+					{cleanName(part)}
+				</Label>
 			</li>
 		{/each}
 	</ul>
@@ -109,9 +103,7 @@
 	<div class="mt-4 flex flex-row flex-wrap gap-4">
 		{#each charts as options}
 			{@const show = parts_selected.includes(`${options.title?.text}`)}
-			{#if show}
-				<Line {options} />
-			{/if}
+			{#if show}<Line {options} />{/if}
 		{/each}
 	</div>
 {/if}
