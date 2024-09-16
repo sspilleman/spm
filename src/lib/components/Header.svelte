@@ -1,23 +1,12 @@
 <script lang="ts">
 	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
-	import { computation } from '$lib/stores/computation';
-	import { usage, ratecard, db } from '$lib/db';
+	import { usage, ratecard, db, computation } from '$lib/db';
 	import { Indicator } from 'flowbite-svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import Logo from '$lib/components/Logo.svelte';
 
 	const accept = `text/csv`;
 	// const accept = `text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`;
-
-	// const load = async () => {
-	// 	const c = await parseSampleComputation();
-	// 	if (c) computation.set(c);
-	// 	const r = await parseSampleRatecard();
-	// 	if (r) ratecard.set(r);
-	// 	const u = await parseSampleUsage();
-	// 	if (u) usage.set(u);
-	// };
-	// load();
 
 	const change = async (e: null | EventTarget) => {
 		let files: FileList = (e as HTMLInputElement).files as FileList;
@@ -39,7 +28,11 @@
 				}
 			} else if (file.type === 'text/csv' && name.includes('computation')) {
 				const c = await parseComputation(file);
-				if (c) computation.set(c);
+				console.log(c);
+				if (c) {
+					await db.computation.clear();
+					console.log(await db.computation.bulkAdd(c));
+				}
 			} else {
 				alert(`incorect filename or type combo: ${file.name}, ${file.type}`);
 			}

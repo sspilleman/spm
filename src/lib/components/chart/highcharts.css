@@ -106,9 +106,7 @@
 	stroke-width: 0;
 }
 .highcharts-title {
-	/* fill: var(--highcharts-neutral-color-80); */
-	fill: rgb(255 75 170 / var(--tw-text-opacity));
-	/* font-size: 1.2em; */
+	fill: #93ff96;
 	font-size: 1em;
 	font-weight: 700;
 }

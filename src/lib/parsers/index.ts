@@ -1,3 +1,3 @@
-export { parseComputation, parseSampleComputation } from './computation';
-export { parseRatecard, parseSampleRatecard } from './ratecard';
-export { parseUsage, parseSampleUsage } from './usage';
+export { parseComputation } from './computation';
+export { parseRatecard } from './ratecard';
+export { parseUsage } from './usage';

@@ -1,3 +1,13 @@
+export type RateSourceColumns =
+	| 'Active'
+	| 'End Date'
+	| 'Max Quantity'
+	| 'Net Unit Price UOM'
+	| 'Net Unit Price'
+	| 'Product Name'
+	| 'Product Part'
+	| 'Start Date'
+	| 'UOM';
 export interface Rate {
 	id: number;
 	Active: boolean;

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { ChartLineUpOutline, EuroOutline, ClipboardOutline } from 'flowbite-svelte-icons';
-	import { computation } from '$lib/stores/computation';
-	import { ratecard, usage } from '$lib/db';
+	import { ratecard, usage, computation, db } from '$lib/db';
 </script>
 
 <svelte:head>
