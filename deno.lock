@@ -1,5 +1,5 @@
 {
-  "version": "3",
+  "version": "4",
   "remote": {
     "https://deno.land/std@0.152.0/_util/assert.ts": "e94f2eb37cebd7f199952e242c77654e43333c1ac4c5c700e929ea3aa5489f74",
     "https://deno.land/std@0.152.0/_util/os.ts": "3b4c6e27febd119d36a416d7a97bd3b0251b77c88942c8f16ee5953ea13e2e49",
@@ -94,9 +94,9 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@sveltejs/adapter-auto@^3.0.0",
-        "npm:@sveltejs/kit@^2.0.0",
-        "npm:@sveltejs/vite-plugin-svelte@^3.0.0",
+        "npm:@sveltejs/adapter-auto@3",
+        "npm:@sveltejs/kit@2",
+        "npm:@sveltejs/vite-plugin-svelte@3",
         "npm:@types/d3@^7.4.3",
         "npm:@types/eslint@^9.6.0",
         "npm:@types/lodash.merge@^4.6.9",
@@ -105,23 +105,22 @@
         "npm:dexie@^4.0.8",
         "npm:eslint-config-prettier@^9.1.0",
         "npm:eslint-plugin-svelte@^2.36.0",
-        "npm:eslint@^9.0.0",
+        "npm:eslint@9",
         "npm:exceljs@^4.4.0",
         "npm:flowbite-svelte-icons@^1.6.1",
-        "npm:flowbite-svelte@^0.46.16",
-        "npm:globals@^15.0.0",
+        "npm:flowbite-svelte@~0.46.16",
+        "npm:globals@15",
         "npm:highcharts@^11.4.8",
         "npm:prettier-plugin-svelte@^3.1.2",
         "npm:prettier@^3.1.1",
-        "npm:svelte-adapter-deno@^0.9.1",
-        "npm:svelte-check@^4.0.0",
+        "npm:svelte-adapter-deno@~0.9.1",
+        "npm:svelte-check@4",
         "npm:svelte@^4.2.7",
-        "npm:sveltekit-adapter-deno@^0.12.1",
+        "npm:sveltekit-adapter-deno@~0.12.1",
         "npm:tailwindcss@^3.4.11",
-        "npm:typescript-eslint@^8.0.0",
-        "npm:typescript@^5.0.0",
-        "npm:vite@^5.0.3",
-        "npm:xlsx@^0.18.5"
+        "npm:typescript-eslint@8",
+        "npm:typescript@5",
+        "npm:vite@^5.0.3"
       ]
     }
   }

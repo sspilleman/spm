@@ -2,8 +2,7 @@
 	import type { Computation } from '$lib/interfaces/index';
 	import { Button, Label } from 'flowbite-svelte';
 	import Line from '$lib/components/chart/Line.svelte';
-	import { computation, db } from '$lib/db';
-	import type { PointOptionsObject } from 'highcharts';
+	import { computation } from '$lib/db';
 	import type Highcharts from 'highcharts';
 
 	let charts: Highcharts.Options[];
@@ -53,9 +52,8 @@
 	// 	}, [] as string[]);
 	// };
 
-	const cleanName = (str: string) => {
-		return str.replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
-	};
+	const cleanName = (str: string) =>
+		str.replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
 
 	$: if ($computation?.length > 0) createParts();
 	$: if (parts.length > 0) createCharts();

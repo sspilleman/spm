@@ -63,6 +63,7 @@
 					{#if line.editing}
 						<td class="px-2 flex flex-row gap-2 items-center">
 							<CheckOutline
+								withEvents
 								class="cursor-pointer outline-none w-4 h-4 text-green-500"
 								on:click={() => changeProduct(line)}
 							></CheckOutline>
@@ -78,6 +79,7 @@
 					{:else}
 						<td class="px-2 flex flex-row gap-2 items-center"
 							><EditOutline
+								withEvents
 								class="cursor-pointer outline-none w-4 h-4 text-lightgreen"
 								on:click={() => (line.editing = true)}
 							/>
