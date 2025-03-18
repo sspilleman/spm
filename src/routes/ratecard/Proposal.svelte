@@ -101,7 +101,7 @@
 						<td class="px-2 flex flex-row gap-2 items-center">
 							<iconify-icon
 								onclick={() => (line.editing = true)}
-								class="cursor-pointer outline-none text-lightgreen"
+								class="cursor-pointer outline-none text-lime-400"
 								icon="mdi:edit"
 								height="16"
 								noobserver
@@ -115,7 +115,7 @@
 					>
 				</tr>
 			{/each}
-			<tr class="text-lightgreen">
+			<tr class="text-lime-400">
 				<td></td>
 				<td></td>
 				<td></td>
@@ -127,7 +127,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<Button onclick={xlsx} size="sm" outline color="green">
+	<Button onclick={xlsx} size="sm" color="green">
 		<img class="w-6 h-6 me-2" src="./excel.svg" alt="" />export to xls
 	</Button>
 {/if}

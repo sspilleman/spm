@@ -75,7 +75,7 @@
 
 {#if parts && parts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button onclick={() => (parts_selected = [...parts])} size="sm">select all</Button>
+		<Button onclick={() => (parts_selected = [...parts])} size="sm" color="blue">select all</Button>
 		<Button onclick={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
 		<Button onclick={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
 		<Button onclick={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
@@ -94,7 +94,7 @@
 						bind:group={parts_selected}
 						type="checkbox"
 						value={part}
-						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lightgreen focus:ring-lightgreen dark:focus:ring-lightgreen"
+						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lime-400 focus:ring-lime-400 dark:focus:ring-lime-400"
 					/>
 					{cleanName(part)}
 				</Label>

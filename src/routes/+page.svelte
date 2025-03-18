@@ -14,7 +14,7 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<iconify-icon class="outline-none text-primary-600" icon="mdi:table-edit" height="56" noobserver
+				<iconify-icon class="outline-none text-lime-400" icon="mdi:table-edit" height="56" noobserver
 				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">ratecard</div>
@@ -26,7 +26,7 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<iconify-icon class="outline-none text-primary-600" icon="mdi:chart-line" height="56" noobserver
+				<iconify-icon class="outline-none text-lime-400" icon="mdi:chart-line" height="56" noobserver
 				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">usage</div>
@@ -38,7 +38,7 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<iconify-icon class="outline-none text-primary-600" icon="mdi:currency-eur" height="56" noobserver
+				<iconify-icon class="outline-none text-lime-400" icon="mdi:currency-eur" height="56" noobserver
 				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">computation</div>
