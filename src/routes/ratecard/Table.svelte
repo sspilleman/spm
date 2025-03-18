@@ -55,7 +55,7 @@
 			<tr>
 				<td class="px-2 py-0" onclick={() => addProduct(rate)}>
 					<iconify-icon
-						class="outline-none text-lightgreen"
+						class="outline-none text-lime-400"
 						icon="mdi:plus-circle-outline"
 						height="20"
 						noobserver

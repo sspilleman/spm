@@ -4,45 +4,11 @@
 
 :root {
 	--hoverable-distance: 1.5rem;
-	/* --color-1: hsla(var(--color-1-hsl), 1); */
-	/* --color-1-hsl: var(--color-1-h), var(--color-1-s), var(--color-1-l); */
-	/* --color-1-h: 200; */
-	/* --color-1-s: 100%; */
-	/* --color-1-l: 50%; */
-	/* --color-2: hsla(var(--color-2-hsl), 1); */
-	/* --color-2-hsl: var(--color-2-h), var(--color-2-s), var(--color-2-l); */
-	/* --color-2-h: 0; */
-	/* --color-2-s: 0%; */
-	/* --color-2-l: 100%; */
-	/* color: var(--color-1); */
-	/* background-color: var(--color-2); */
-	/* --font-mono: monospace; */
-	/* --font-body: sans-serif; */
-	/* font-family: var(--font-body); */
 }
 
 *,
 html {
 	box-sizing: border-box;
-	scrollbar-width: 0;
-	-ms-overflow-style: -ms-autohiding-scrollbar;
-}
-
-::-webkit-scrollbar {
-	@apply bg-white w-2 h-2;
-}
-
-.dark ::-webkit-scrollbar {
-	@apply bg-gray-900;
-}
-
-::-webkit-scrollbar-thumb {
-	@apply bg-gray-200;
-	-webkit-border-radius: 1ex;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-	@apply bg-gray-800;
 }
 
 a:hover {
@@ -50,20 +16,6 @@ a:hover {
 	@apply cursor-pointer;
 }
 
-a[active='true'],
-.option.selected,
-.pagination-wrapper > .arrow.selected,
-.pagination-wrapper > .number.selected {
-	@apply text-primary-700 !important;
-}
-
-.arrow > svg {
-	outline: none !important;
-	-webkit-appearance: none !important;
-	box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%) !important;
-	box-shadow: none !important;
-}
-
-.max-w-7xl {
-	max-width: calc(100vw - 6rem);
+header a[aria-current='true'] {
+	@apply text-lime-500 font-bold;
 }
