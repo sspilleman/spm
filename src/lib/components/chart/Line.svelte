@@ -3,7 +3,11 @@
 	import merge from 'lodash.merge';
 	import type Highcharts from 'highcharts';
 
-	export let options: Highcharts.Options;
+	interface Props {
+		options: Highcharts.Options;
+	}
+
+	let { options }: Props = $props();
 
 	const defaultOptions: Highcharts.Options = {
 		accessibility: { enabled: false },
@@ -13,7 +17,8 @@
 			zooming: { type: 'x' }
 		},
 		title: { align: 'left' },
-		subtitle: { align: 'left' },
+		// subtitle: { align: 'left' },
+		// subtitle: {  },
 		credits: { enabled: false },
 		plotOptions: {
 			series: { step: 'left', animation: false, marker: { enabled: false } }

@@ -51,34 +51,6 @@ export const splitValues = (line: string) => {
 	return result;
 };
 
-// type UOM =
-//   | "1000 EMAILS SENT"
-//   | "10000 REQUESTS PER MONTH"
-//   | "100K EVTS PR HR"
-//   | "10K GB MEM-SEC"
-//   | "1K EVTS PR HR"
-//   | "1M API CALLS PER MONTH"
-//   | "1M FX IVCX"
-//   | "5K MESSAGES PER HOUR"
-//   | "ECPU PR HR"
-//   | "ENDPOINTS PER MONTH"
-//   | "GB LOG STG PR MO"
-//   | "GB OUTBOUND DATA TX MO"
-//   | "GB PR HR"
-//   | "GB STORAGE CAP PER MO"
-//   | "KEY VER PR MO"
-//   | "LOAD BALANCER HOUR"
-//   | "LOG ANLY STG UN PR MO"
-//   | "M DLVR OPRX"
-//   | "MILLION DATAPOINTS"
-//   | "OCPU PER HOUR"
-//   | "PERF UN PR GB PR MO"
-//   | "PORT HOUR"
-//   | "REQUEST"
-//   | "TB STORAGE CAP PER MONTH"
-//   | "OCPU PER HOUR"
-//   | "USER PER MONTH";
-
 export const uomMultiplier = (uom: string) => {
 	switch (uom) {
 		case '1 SMS MSG SENT':
@@ -183,7 +155,6 @@ export const uomMultiplier = (uom: string) => {
 		case 'AI UN PR HR':
 			return 730;
 		default:
-			// alert(`${uom} unknown`);
 			console.log(`==>${uom} unknown`);
 			break;
 	}

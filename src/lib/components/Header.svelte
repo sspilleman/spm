@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
 	import { usage, ratecard, db, computation } from '$lib/db';
-	import { Indicator } from 'flowbite-svelte';
-	import { DarkMode } from 'flowbite-svelte';
+	import { Indicator, Darkmode } from 'svelte-5-ui-lib';
 	import Logo from '$lib/components/Logo.svelte';
 
 	const accept = `text/csv`;
@@ -90,7 +89,7 @@
 		{/if}
 	</div>
 	<div class="grow">
-		<input {accept} class="w-full" type="file" multiple on:change={(e) => change(e.target)} />
+		<input {accept} class="w-full" type="file" multiple onchange={(e) => change(e.target)} />
 	</div>
-	<DarkMode />
+	<Darkmode />
 </header>

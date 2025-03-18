@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { ChartLineUpOutline, EuroOutline, ClipboardOutline } from 'flowbite-svelte-icons';
 	import { ratecard, usage, computation, db } from '$lib/db';
 </script>
 
@@ -15,7 +14,8 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<ClipboardOutline class="outline-none h-28 w-16 text-primary-600"></ClipboardOutline>
+				<iconify-icon class="outline-none text-primary-600" icon="mdi:table-edit" height="56" noobserver
+				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">ratecard</div>
 		</a>
@@ -26,7 +26,8 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<ChartLineUpOutline class="outline-none h-28 w-16 text-primary-600"></ChartLineUpOutline>
+				<iconify-icon class="outline-none text-primary-600" icon="mdi:chart-line" height="56" noobserver
+				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">usage</div>
 		</a>
@@ -37,7 +38,8 @@
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
 		>
 			<div class="flex flex-row justify-center">
-				<EuroOutline class="outline-none h-28 w-16 text-primary-600"></EuroOutline>
+				<iconify-icon class="outline-none text-primary-600" icon="mdi:currency-eur" height="56" noobserver
+				></iconify-icon>
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">computation</div>
 		</a>
