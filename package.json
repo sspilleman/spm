@@ -1,5 +1,5 @@
 {
-	"name": "spm-new",
+	"name": "spm",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
@@ -27,6 +27,7 @@
 		"flowbite": "3.1.2",
 		"globals": "16.0.0",
 		"highcharts": "12.1.2",
+		"iconify-icon": "2.3.0",
 		"lodash.merge": "4.6.2",
 		"prettier-plugin-svelte": "3.3.3",
 		"prettier": "3.5.3",
@@ -39,9 +40,6 @@
 		"typescript-eslint": "8.26.1",
 		"typescript": "5.8.2",
 		"vite": "6.2.2"
-	},
-	"dependencies": {
-		"iconify-icon": "2.3.0"
 	},
 	"type": "module"
 }
