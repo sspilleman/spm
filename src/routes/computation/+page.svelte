@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Computation } from '$lib/interfaces/index';
-	import { Button, Label } from 'flowbite-svelte';
+	import { Button, Label } from 'svelte-5-ui-lib';
 	import Line from '$lib/components/chart/Line.svelte';
 	import { computation } from '$lib/db';
 	import type Highcharts from 'highcharts';
 
-	let charts: Highcharts.Options[];
-	let [parts, parts_selected]: [string[], string[]] = [[], []];
+	let charts: Highcharts.Options[] | undefined = $state();
+	let [parts, parts_selected]: [string[], string[]] = $state([[], []]);
 
 	const createCharts = () => {
 		charts = parts.reduce((prev, part) => {
@@ -55,8 +55,12 @@
 	const cleanName = (str: string) =>
 		str.replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
 
-	$: if ($computation?.length > 0) createParts();
-	$: if (parts.length > 0) createCharts();
+	$effect(() => {
+		if ($computation?.length > 0) createParts();
+	});
+	$effect(() => {
+		if (parts.length > 0) createCharts();
+	});
 </script>
 
 <svelte:head>
@@ -66,8 +70,8 @@
 
 {#if parts && parts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button on:click={() => (parts_selected = [...parts])} size="sm">select all</Button>
-		<Button on:click={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
+		<Button onclick={() => (parts_selected = [...parts])} size="sm">select all</Button>
+		<Button onclick={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
 		<!-- <Button on:click={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
 		<Button on:click={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
 		<Button on:click={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
@@ -94,7 +98,7 @@
 	</ul>
 {/if}
 
-{#if charts?.length > 0}
+{#if charts && charts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-4">
 		{#each charts as options}
 			{@const show = parts_selected.includes(`${options.title?.text}`)}

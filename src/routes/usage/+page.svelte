@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { Usage } from '$lib/interfaces/index';
-	import { Button, Label } from 'flowbite-svelte';
+	import { Button, Label } from 'svelte-5-ui-lib';
 	import Line from '$lib/components/chart/Line.svelte';
 	import { usage } from '$lib/db';
 	import type { PointOptionsObject } from 'highcharts';
 	import type Highcharts from 'highcharts';
 
-	let charts: Highcharts.Options[];
-	let [parts, parts_selected]: [string[], string[]] = [[], []];
+	let charts: Highcharts.Options[] | undefined = $state();
+	let [parts, parts_selected]: [string[], string[]] = $state([[], []]);
 
 	const createCharts = () => {
 		charts = parts.reduce((prev, part) => {
@@ -16,7 +16,7 @@
 					.filter((u) => u['Product Name'] === part)
 					.sort((a, b) => b['Starting Date'] - a['Starting Date'])
 					.map((u) => [u['Starting Date'], u['Usage Quantity']]);
-				console.log(data);
+				// console.log(data);
 				prev.push({
 					title: { text: part },
 					xAxis: { type: 'datetime' },
@@ -60,8 +60,12 @@
 		return splitted.map((s) => s.trim()).join(' - ');
 	};
 
-	$: if ($usage?.length > 0) createParts();
-	$: if (parts.length > 0) createCharts();
+	$effect(() => {
+		if ($usage?.length > 0) createParts();
+	});
+	$effect(() => {
+		if (parts.length > 0) createCharts();
+	});
 </script>
 
 <svelte:head>
@@ -71,13 +75,13 @@
 
 {#if parts && parts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button on:click={() => (parts_selected = [...parts])} size="sm">select all</Button>
-		<Button on:click={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
-		<Button on:click={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
-		<Button on:click={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
-		<Button on:click={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
-		<Button on:click={() => findChanged(9)} size="sm" color="green">modified 9 days</Button>
-		<Button on:click={() => findChanged(12)} size="sm" color="green">modified 12 days</Button>
+		<Button onclick={() => (parts_selected = [...parts])} size="sm">select all</Button>
+		<Button onclick={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
+		<Button onclick={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
+		<Button onclick={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
+		<Button onclick={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
+		<Button onclick={() => findChanged(9)} size="sm" color="green">modified 9 days</Button>
+		<Button onclick={() => findChanged(12)} size="sm" color="green">modified 12 days</Button>
 	</div>
 	<ul class="mt-4 flex flex-row flex-wrap">
 		{#each parts as part (part)}
@@ -99,7 +103,7 @@
 	</ul>
 {/if}
 
-{#if charts?.length > 0}
+{#if charts && charts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-4">
 		{#each charts as options}
 			{@const show = parts_selected.includes(`${options.title?.text}`)}

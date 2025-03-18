@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { ratecard, db } from '$lib/db';
-	import { Input } from 'flowbite-svelte';
+	import { ButtonGroup, Input, InputAddon } from 'svelte-5-ui-lib';
 	import { uomMultiplier } from '$lib/parsers/helpers';
-	import { SearchOutline, CirclePlusOutline } from 'flowbite-svelte-icons';
 	import type { Rate } from '$lib/interfaces/index';
 
-	let ratecardFiltered: Rate[] = [];
+	let ratecardFiltered: Rate[] = $state([]);
 
 	const addProduct = async (rate: Rate) => {
 		const count = await db.quotes.where('id').equals(rate['id']).count();
@@ -24,12 +23,18 @@
 		}
 	};
 
-	$: if ($ratecard) ratecardFiltered = $ratecard;
+	$effect(() => {
+		if ($ratecard) ratecardFiltered = $ratecard;
+	});
 </script>
 
-<Input type="search" placeholder="search" on:input={(e) => ratesearch(e.target)}>
-	<SearchOutline slot="left" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
-</Input>
+<ButtonGroup class="w-full">
+	<InputAddon>
+		<iconify-icon class="text-black dark:text-white" icon="mdi:search" height="20" noobserver
+		></iconify-icon>
+	</InputAddon>
+	<Input type="search" placeholder="search" oninput={(e) => ratesearch(e.target)}></Input>
+</ButtonGroup>
 
 <table class="mt-4 font-mono text-xs">
 	<thead>
@@ -48,9 +53,14 @@
 			{@const quantity = !Number.isNaN(rate['Max Quantity']) ? rate['Max Quantity'] : ''}
 			{@const multiplier = uomMultiplier(rate['UOM'])}
 			<tr>
-				<td class="px-2" on:click={() => addProduct(rate)}
-					><CirclePlusOutline class="outline-none w-5 h-5 text-lightgreen" /></td
-				>
+				<td class="px-2 py-0" onclick={() => addProduct(rate)}>
+					<iconify-icon
+						class="outline-none text-lightgreen"
+						icon="mdi:plus-circle-outline"
+						height="20"
+						noobserver
+					></iconify-icon>
+				</td>
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Product Part']}</td>
 				<!-- <td class="px-2">{cleanName(rate['Product Name'], rate['UOM'])}</td> -->
 				<td class="px-2">{rate['Product Name']}</td>

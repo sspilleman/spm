@@ -3,7 +3,11 @@
 	import merge from 'lodash.merge';
 	import type Highcharts from 'highcharts';
 
-	export let options: Highcharts.Options;
+	interface Props {
+		options: Highcharts.Options;
+	}
+
+	let { options }: Props = $props();
 
 	let pointFormatter: Highcharts.FormatterCallbackFunction<Highcharts.Point> = function () {
 		const color = this.graphic?.element.classList[1];
