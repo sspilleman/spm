@@ -1,39 +1,43 @@
 <script lang="ts">
-	import type { Computation } from '$lib/interfaces/index';
 	import { Button, Label } from 'svelte-5-ui-lib';
 	import Line from '$lib/components/chart/Line.svelte';
 	import { computation } from '$lib/db';
+	import type { Computation } from '$lib/interfaces/index';
 	import type Highcharts from 'highcharts';
 
-	let charts: Highcharts.Options[] | undefined = $state();
-	let [parts, parts_selected]: [string[], string[]] = $state([[], []]);
+	let charts: Record<string, Highcharts.Options> = $state({});
+	let skus = $state<string[]>([]);
+	let selectedskus = $state<string[]>([]);
 
 	const createCharts = () => {
-		charts = parts.reduce((prev, part) => {
-			const records = $computation.filter((u) => u['Product'] === part);
-			const byDate = Object.groupBy(records, (r) => r['Metered Service Date'].getTime());
-			const data = Object.keys(byDate)
-				.sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
-				.map((d) => {
-					const date = parseInt(d, 10);
-					const total = byDate[date]?.reduce((prev: number, cur: Computation) => {
-						prev += cur['Computed Amount'];
-						return prev;
-					}, 0) as number;
-					return [date, parseFloat(total.toFixed(10))];
-				});
-			prev.push({
-				title: { text: part },
-				xAxis: { type: 'datetime' },
-				yAxis: { title: { text: 'EUR' } },
-				legend: { enabled: false },
-				series: [{ type: 'line', name: part, data }]
-			});
-			return prev;
-		}, [] as Highcharts.Options[]);
+		charts = skus.reduce(
+			(prev, sku) => {
+				const records = $computation.filter((u) => u['SKU'] === sku);
+				const byDate = Object.groupBy(records, (r) => r['Metered Service Date'].getTime());
+				const data = Object.keys(byDate)
+					.sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
+					.map((d) => {
+						const date = parseInt(d, 10);
+						const total = byDate[date]?.reduce((prev: number, cur: Computation) => {
+							prev += cur['Computed Amount'];
+							return prev;
+						}, 0) as number;
+						return [date, parseFloat(total.toFixed(10))];
+					});
+				prev[sku] = {
+					title: { text: name(sku) },
+					xAxis: { type: 'datetime' },
+					yAxis: { title: { text: 'EUR' } },
+					legend: { enabled: false },
+					series: [{ type: 'line', name: sku, data }]
+				};
+				return prev;
+			},
+			{} as Record<string, Highcharts.Options>
+		);
 	};
-	const createParts = () => {
-		parts = [...new Set($computation.map((s) => s['Product']))];
+	const createParts = (records: Computation[]) => {
+		skus = [...new Set(records.map((s) => s['SKU']))];
 	};
 
 	// const findChanged = (days: number) => {
@@ -52,15 +56,23 @@
 	// 	}, [] as string[]);
 	// };
 
-	const cleanName = (str: string) =>
-		str.replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
-
 	$effect(() => {
-		if ($computation?.length > 0) createParts();
+		if ($computation?.length > 0) createParts($computation);
 	});
 	$effect(() => {
-		if (parts.length > 0) createCharts();
+		if (skus.length > 0) createCharts();
 	});
+	let names: Record<string, string> = $derived.by(() =>
+		skus.reduce(
+			(prev, cur) => {
+				prev[cur] = $computation.find((c) => c.SKU === cur)?.Product as string;
+				return prev;
+			},
+			{} as Record<string, string>
+		)
+	);
+	const name = (sku: string) =>
+		names[sku].replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
 </script>
 
 <svelte:head>
@@ -68,10 +80,10 @@
 	<meta name="description" content="oracle usage" />
 </svelte:head>
 
-{#if parts && parts.length > 0}
+{#if skus && skus.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button onclick={() => (parts_selected = [...parts])} size="sm" color="blue">select all</Button>
-		<Button onclick={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
+		<Button onclick={() => (selectedskus = [...skus])} size="sm" color="blue">select all</Button>
+		<Button onclick={() => (selectedskus = [])} size="sm" color="dark">select none</Button>
 		<!-- <Button on:click={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
 		<Button on:click={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
 		<Button on:click={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
@@ -79,30 +91,27 @@
 		<Button on:click={() => findChanged(12)} size="sm" color="green">modified 12 days</Button> -->
 	</div>
 	<ul class="mt-4 flex flex-row flex-wrap">
-		{#each parts as part (part)}
+		{#each skus as sku (sku)}
 			<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600 w-96">
-				<!-- <Checkbox bind:group={parts_selected} value={part}>{cleanName(part)}</Checkbox> -->
 				<Label
 					class="text-sm rtl:text-right font-medium text-gray-900 dark:text-gray-300 flex items-center"
 				>
 					<input
-						bind:group={parts_selected}
+						bind:group={selectedskus}
 						type="checkbox"
-						value={part}
+						value={sku}
 						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lime-400 focus:ring-lime-400 dark:focus:ring-lime-400"
 					/>
-					{cleanName(part)}
+					{name(sku)}
 				</Label>
 			</li>
 		{/each}
 	</ul>
 {/if}
 
-{#if charts && charts.length > 0}
-	<div class="mt-4 flex flex-row flex-wrap gap-4">
-		{#each charts as options}
-			{@const show = parts_selected.includes(`${options.title?.text}`)}
-			{#if show}<Line {options} />{/if}
-		{/each}
-	</div>
-{/if}
+<div class="mt-4 flex flex-row flex-wrap gap-4">
+	{#each selectedskus as sku}
+		{@const options = charts[sku]}
+		<Line {options} />
+	{/each}
+</div>

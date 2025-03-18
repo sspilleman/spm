@@ -17,11 +17,14 @@
 			zooming: { type: 'x' }
 		},
 		title: { align: 'left' },
-		// subtitle: { align: 'left' },
-		// subtitle: {  },
 		credits: { enabled: false },
 		plotOptions: {
-			series: { step: 'left', animation: false, marker: { enabled: false } }
+			series: {
+				step: 'left',
+				animation: false,
+				marker: { enabled: false },
+				// events: { click: (e) => console.log(e) }
+			}
 		},
 		tooltip: {
 			headerFormat:
