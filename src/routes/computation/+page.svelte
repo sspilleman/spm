@@ -36,12 +36,12 @@
 			},
 			{} as Record<string, Highcharts.Options>
 		);
-		console.log(`[createCharts] took ${performance.now() - start} milliseconds.`);
+		// console.log(`[createCharts] took ${performance.now() - start} milliseconds.`);
 	};
 	const createParts = (records: Computation[]) => {
 		const start = performance.now();
 		skus = [...new Set(records.map((s) => s['SKU']))];
-		console.log(`[createParts] took ${performance.now() - start} milliseconds.`);
+		// console.log(`[createParts] took ${performance.now() - start} milliseconds.`);
 	};
 
 	// const findChanged = (days: number) => {
@@ -60,9 +60,9 @@
 	// 	}, [] as string[]);
 	// };
 
-	$effect(() => {
-		console.log('selectedskus', selectedskus);
-	});
+	// $effect(() => {
+	// 	console.log('selectedskus', selectedskus);
+	// });
 	$effect(() => {
 		if ($computation?.length > 0) createParts($computation);
 	});
