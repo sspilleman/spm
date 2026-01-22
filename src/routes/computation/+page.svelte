@@ -10,6 +10,7 @@
 	let selectedskus = $state<string[]>([]);
 
 	const createCharts = () => {
+		const start = performance.now();
 		charts = skus.reduce(
 			(prev, sku) => {
 				const records = $computation.filter((u) => u['SKU'] === sku);
@@ -35,9 +36,12 @@
 			},
 			{} as Record<string, Highcharts.Options>
 		);
+		console.log(`[createCharts] took ${performance.now() - start} milliseconds.`);
 	};
 	const createParts = (records: Computation[]) => {
+		const start = performance.now();
 		skus = [...new Set(records.map((s) => s['SKU']))];
+		console.log(`[createParts] took ${performance.now() - start} milliseconds.`);
 	};
 
 	// const findChanged = (days: number) => {
@@ -56,6 +60,9 @@
 	// 	}, [] as string[]);
 	// };
 
+	$effect(() => {
+		console.log('selectedskus', selectedskus);
+	});
 	$effect(() => {
 		if ($computation?.length > 0) createParts($computation);
 	});
@@ -76,8 +83,8 @@
 </script>
 
 <svelte:head>
-	<title>Oracle | Usage</title>
-	<meta name="description" content="oracle usage" />
+	<title>Oracle | Computation</title>
+	<meta name="description" content="oracle computation" />
 </svelte:head>
 
 {#if skus && skus.length > 0}

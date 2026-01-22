@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { ratecard, usage, computation, db } from '$lib/db';
+	// import { ratecard, usage, computation, db } from '$lib/db';
+	import { ratecard, computation } from '$lib/db';
 </script>
 
 <svelte:head>
@@ -20,7 +21,7 @@
 			<div class="flex flex-row justify-center dark:text-white mb-6">ratecard</div>
 		</a>
 	{/if}
-	{#if $usage && $usage.length > 0}
+	<!-- {#if $usage && $usage.length > 0}
 		<a
 			href="/usage"
 			class="button w-48 h-48 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 flex flex-col rounded-xl justify-evenly"
@@ -31,7 +32,7 @@
 			</div>
 			<div class="flex flex-row justify-center dark:text-white mb-6">usage</div>
 		</a>
-	{/if}
+	{/if} -->
 	{#if $computation && $computation.length > 1}
 		<a
 			href="/computation"
