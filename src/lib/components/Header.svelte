@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
-	import { usage, ratecard, db, computation } from '$lib/db';
+	// import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
+	import { parseRatecard, parseComputation } from '$lib/parsers/index';
+	// import { usage, ratecard, db, computation } from '$lib/db';
+	import { ratecard, db, computation } from '$lib/db';
 	import { Indicator, Darkmode } from 'svelte-5-ui-lib';
 	import { page } from '$app/state';
 	import Logo from '$lib/components/Logo.svelte';
@@ -18,11 +20,11 @@
 					await db.rates.bulkAdd(r);
 				}
 			} else if (file.type === 'text/csv' && name.includes('usage')) {
-				const u = await parseUsage(file);
-				if (u) {
-					await db.usage.clear();
-					await db.usage.bulkAdd(u);
-				}
+				// const u = await parseUsage(file);
+				// if (u) {
+				// 	await db.usage.clear();
+				// 	await db.usage.bulkAdd(u);
+				// }
 			} else if (file.type === 'text/csv' && name.includes('computation')) {
 				const c = await parseComputation(file);
 				console.log(c);
@@ -39,7 +41,7 @@
 	const routes = [
 		{ id: '/', name: 'Home' },
 		{ id: '/ratecard', name: 'Ratecard' },
-		{ id: '/usage', name: 'Usage' },
+		// { id: '/usage', name: 'Usage' },
 		{ id: '/computation', name: 'Computation' }
 	];
 </script>
@@ -71,14 +73,14 @@
 			<Indicator class="inline-block" color="red" />
 		{/if}
 	</div>
-	<div>
+	<!-- <div>
 		usage
 		{#if $usage?.length > 0}
 			<Indicator class="inline-block bg-lime-400" />
 		{:else}
 			<Indicator class="inline-block" color="red" />
 		{/if}
-	</div>
+	</div> -->
 	<div class="grow">
 		<input {accept} class="w-full" type="file" multiple onchange={(e) => change(e.target)} />
 	</div>

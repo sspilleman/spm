@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+@config "../tailwind.config.cjs";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../node_modules/svelte-5-ui-lib/dist";
+@import '../static/fonts/titillium/titillium.css';
+@import '../static/fonts/hack/hack.css';
+
+:root {
+	--hoverable-distance: 1.5rem;
+	--default-font-family: Titillium;
+	--font-mono: Hack;
+}
+
+*,
+html {
+	box-sizing: border-box;
+}
+
+a:hover {
+	text-decoration: underline;
+	@apply cursor-pointer;
+}
+
+header a[aria-current='true'] {
+	@apply text-lime-500 font-bold;
+}

@@ -10,6 +10,7 @@
 	let [parts, parts_selected]: [string[], string[]] = $state([[], []]);
 
 	const createCharts = () => {
+		const start = performance.now();
 		charts = parts.reduce((prev, part) => {
 			if ($usage) {
 				const data: PointOptionsObject[] = $usage
@@ -27,16 +28,19 @@
 			}
 			return prev;
 		}, [] as Highcharts.Options[]);
-		// console.log(charts);
+		console.log(`[createCharts] took ${performance.now() - start} milliseconds.`);
 	};
 
 	const createParts = () => {
+		const start = performance.now();
 		parts = [...new Set($usage.map((s) => s['Product Name']))].filter(
 			(s) => s.toLocaleLowerCase() // .includes('database')
 		);
+		console.log(`[createParts] took ${performance.now() - start} milliseconds.`);
 	};
 
 	const findChanged = (days: number) => {
+		const start = performance.now();
 		parts_selected = parts.reduce((prev, part) => {
 			if (usage) {
 				const day = 24 * 60 * 60 * 1000;
@@ -52,6 +56,7 @@
 			}
 			return prev;
 		}, [] as string[]);
+		console.log(`[findChanged] took ${performance.now() - start} milliseconds.`);
 	};
 
 	const cleanName = (str: string) => {
@@ -65,6 +70,8 @@
 	});
 	$effect(() => {
 		if (parts.length > 0) createCharts();
+		console.log('parts', parts);
+		console.log('parts_selected', parts_selected);
 	});
 </script>
 
