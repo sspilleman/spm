@@ -10,6 +10,7 @@
     "npm:@types/lodash.merge@4.6.9": "4.6.9",
     "npm:autoprefixer@10.4.23": "10.4.23_postcss@8.5.6",
     "npm:d3@7.9.0": "7.9.0_d3-selection@3.0.0",
+    "npm:date-fns@^4.1.0": "4.1.0",
     "npm:dexie@4.2.1": "4.2.1",
     "npm:eslint-config-prettier@10.1.8": "10.1.8_eslint@9.39.2",
     "npm:eslint-plugin-svelte@3.14.0": "3.14.0_eslint@9.39.2_svelte@5.47.1__acorn@8.15.0_postcss@8.5.6",
@@ -1574,6 +1575,9 @@
         "d3-zoom"
       ]
     },
+    "date-fns@4.1.0": {
+      "integrity": "sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg=="
+    },
     "dayjs@1.11.13": {
       "integrity": "sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg=="
     },
@@ -2965,6 +2969,7 @@
         "npm:@types/lodash.merge@4.6.9",
         "npm:autoprefixer@10.4.23",
         "npm:d3@7.9.0",
+        "npm:date-fns@^4.1.0",
         "npm:dexie@4.2.1",
         "npm:eslint-config-prettier@10.1.8",
         "npm:eslint-plugin-svelte@3.14.0",

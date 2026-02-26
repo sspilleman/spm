@@ -17,7 +17,8 @@
 				uom: rate.UOM,
 				name: rate['Product Name'],
 				multiplier: uomMultiplier(rate.UOM),
-				ppm: q.quantity * uomMultiplier(rate.UOM) * rate['Net Unit Price']
+				ppm: q.quantity * uomMultiplier(rate.UOM) * rate['Net Unit Price'],
+				discount: rate.Discount
 			});
 		});
 	};
@@ -60,6 +61,7 @@
 				<th class="text-left px-2">Quantity</th>
 				<th class="text-left px-2">Month</th>
 				<th class="text-left px-2">Year</th>
+				<th class="text-left px-2">Discount</th>
 			</tr>
 		</thead>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -113,6 +115,8 @@
 					<td class="px-2 font-semibold text-black dark:text-white"
 						>EUR {(12 * line?.ppm).toFixed(2)}</td
 					>
+					<td class="px-2 font-semibold text-black dark:text-white">{line?.discount.toFixed(0)}%</td
+					>
 				</tr>
 			{/each}
 			<tr class="text-lime-400">
@@ -124,6 +128,7 @@
 				<td class="text-right px-2">Total</td>
 				<td class="font-extrabold px-2">EUR {tpm.toFixed(2)}</td>
 				<td class="font-extrabold px-2">EUR {(12 * tpm).toFixed(2)}</td>
+				<td></td>
 			</tr>
 		</tbody>
 	</table>

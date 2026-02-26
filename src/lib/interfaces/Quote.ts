@@ -11,4 +11,5 @@ export interface Line extends Quote {
 	name: string;
 	ppm: number;
 	multiplier: number;
+	discount: number;
 }
