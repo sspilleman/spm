@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ratecard, db } from '$lib/db';
 	import { ButtonGroup, Input, InputAddon } from 'svelte-5-ui-lib';
-	import { uomMultiplier } from '$lib/parsers/helpers';
+	import { displayDate, uomMultiplier } from '$lib/parsers/helpers';
 	import type { Rate } from '$lib/interfaces/index';
 
 	let ratecardFiltered: Rate[] = $state([]);
@@ -18,7 +18,7 @@
 		if (txt.length === 0) ratecardFiltered = $ratecard;
 		else {
 			const filter = (r: Rate) =>
-				JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
+				r.Active && JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
 			ratecardFiltered = $ratecard.filter(filter);
 		}
 	};
@@ -46,6 +46,9 @@
 			<th class="text-left px-2">Price</th>
 			<th class="text-left px-2">Tier</th>
 			<th class="text-left px-2">PPM</th>
+			<th class="text-left px-2">Discount</th>
+			<th class="text-left px-2">Start</th>
+			<th class="text-left px-2">End</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,6 +71,9 @@
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Net Unit Price']}</td>
 				<td class="px-2">{quantity}</td>
 				<td class="px-2">EUR {(rate['Net Unit Price'] * multiplier).toFixed(2)}</td>
+				<td class="px-2">{rate.Discount.toFixed(0)}%</td>
+				<td class="px-2">{displayDate(rate['Start Date'])}</td>
+				<td class="px-2">{displayDate(rate['End Date'])}</td>
 			</tr>
 		{/each}
 	</tbody>

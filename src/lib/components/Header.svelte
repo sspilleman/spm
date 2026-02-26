@@ -11,6 +11,7 @@
 
 	const change = async (e: null | EventTarget) => {
 		let files: FileList = (e as HTMLInputElement).files as FileList;
+		console.log(files);
 		for (const file of files) {
 			const name = file.name.toLocaleLowerCase();
 			if (file.type === 'text/csv' && name.includes('ratecard')) {
