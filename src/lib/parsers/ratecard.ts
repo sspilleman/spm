@@ -12,7 +12,7 @@ const rowCoverter = (r: d3.DSVRowString<RateSourceColumns>) => {
 	const row = {
 		"End Date": newDate(r["End Date"]),
 		"Max Quantity": parseFloat(r["Usage Max"]),
-		"Net Unit Price": parseFloat(r["Net Unit Price (LC)"]),
+		"Net Unit Price": parseFloat(r["Net Unit Price (USD)"]),
 		"Product Name": cleanName(r["Product Name"]),
 		"Product Part": r["Part Num"],
 		"Start Date": newDate(r["Start Date"]),

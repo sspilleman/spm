@@ -4,6 +4,7 @@ export type RateSourceColumns =
 	| "Usage Max"
 	| "Net Unit Price UOM"
 	| "Net Unit Price (LC)"
+	| "Net Unit Price (USD)"
 	| "Rate Card Discount (%)"
 	| "Product Name"
 	| "Part Num"
