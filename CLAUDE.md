@@ -37,7 +37,7 @@ There is no test suite. (The untracked `exceljs/` folder in the root is not part
 
 **Parsers** (`src/lib/parsers/`) use `d3.csvParse` with a row converter that maps source columns (the `*SourceColumns` union types in `src/lib/interfaces/`) to the app's typed records. Both parsers call `rows.pop()` to drop the trailing row. Things to know:
 
-- `ratecard.ts` expects the current export format (`Part Num`, `Net Unit Price (USD)`, `Rate Card Discount (%)`, dates like `28-Dec-2025`). `static/ratecard 2026-02-26.csv` is a sample in that format. `static/ratecard.csv` is the older format, which no longer parses correctly.
+- `ratecard.ts` expects the current export format (`Part Num`, `Net Unit Price (USD)`, `Rate Card Discount (%)`, dates like `28-Dec-2025`). `static/ratecard 2026-02-26.csv` is a sample in that format. Older exports (`Product Part`, `Net Unit Price`, `MM-dd-yyyy` dates) parse with empty prices, dates and part numbers.
 - Ratecard rows get sequential `id`s at parse time. A `Quote`'s `id` is the `Rate.id` it refers to, so uploading a different ratecard can point existing quotes at the wrong rates.
 - `helpers.ts` has `uomMultiplier(uom)`: it returns `1` for monthly or per-unit UOMs and `730` (hours per month) for hourly ones. Unknown UOMs log `==>… unknown` and return `0`, which makes the price `0`. When Oracle adds new UOM strings, add them to the right group.
 - There are two different `cleanName` functions: `parsers/helpers.ts` strips "Oracle Cloud Infrastructure -" style prefixes when parsing, and `lib/utils.ts` strips trailing UOM words from product names for the Excel export.

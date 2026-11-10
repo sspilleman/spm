@@ -56,8 +56,7 @@ The dev server runs on **http://localhost:4000** and listens on all interfaces (
 
 | File                             | Loads as    | Notes                                    |
 | -------------------------------- | ----------- | ---------------------------------------- |
-| `static/ratecard 2026-02-26.csv` | Ratecard    | Current export format, use this one      |
-| `static/ratecard.csv`            | Ratecard    | Old format, no longer parses correctly   |
+| `static/ratecard 2026-02-26.csv` | Ratecard    | Current export format                    |
 | `static/computation.csv`         | Computation |                                          |
 | `static/usage.csv`               | (disabled)  | The usage view is currently switched off |
 
@@ -314,7 +313,7 @@ deno task preview
 
 - **Reloading a ratecard can break the proposal.** Quotes point at rate IDs, and those IDs are assigned again every time a ratecard is read. If the new file has its rows in a different order or a different number of rows, existing proposal lines can show the wrong rate. Clear the proposal after loading a new ratecard.
 - **Currency labels.** The ratecard is read from `Net Unit Price (USD)`, but the lookup and proposal show amounts with an `EUR` label.
-- **The old ratecard format no longer parses.** Files with `Product Part` / `MM-dd-yyyy` columns (such as `static/ratecard.csv`) need the current export format.
+- **The old ratecard format no longer parses.** Older ratecard exports with `Product Part` / `Net Unit Price` columns and `MM-dd-yyyy` dates load with empty prices, dates and part numbers. Use the current export format instead.
 - **Unknown UOMs are priced at 0.** See [How prices are calculated](#how-prices-are-calculated).
 - **The usage view is disabled.** The usage parser, its Dexie table, its nav entry and its home tile are commented out in `db.ts`, `parsers/index.ts`, `interfaces/index.ts`, `Header.svelte` and `routes/+page.svelte`, and its page is in `disabled/usage/`. To turn it back on, uncomment all of these and move the page back under `src/routes/usage/`.
 - **Clearing site data deletes everything.** All data lives in the browser's IndexedDB, so clearing site data removes every loaded file and the proposal.
