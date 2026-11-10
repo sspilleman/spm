@@ -2,7 +2,6 @@
 	import { type Snippet } from 'svelte';
 	import Header from '#lib/components/Header.svelte';
 	import '../app.css';
-	import 'iconify-icon';
 	interface Props {
 		children: Snippet;
 	}

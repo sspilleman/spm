@@ -6,3 +6,6 @@ deno.lock
 
 # Static assets (fonts, sample data, templates)
 /static/
+
+# Written by the Claude Code CLI (claude mcp add)
+.mcp.json

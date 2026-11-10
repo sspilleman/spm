@@ -7,6 +7,7 @@ export type RateSourceColumns =
 	| 'Net Unit Price (USD)'
 	| 'Rate Card Discount (%)'
 	| 'Product Name'
+	| 'Row WID'
 	| 'Part Num'
 	| 'Start Date'
 	| 'UOM';

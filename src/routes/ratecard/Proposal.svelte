@@ -4,49 +4,50 @@
 	import { Button } from 'flowbite-svelte';
 	import type { Rate, Line, Quote } from '#lib/interfaces/index.ts';
 	import { exportToXls } from './exceljs';
+	import Icon from '#lib/components/Icon.svelte';
 
-	let lines: Line[] = $state([]);
-	let tpm: number = $state(0);
+	// quote id -> the quantity being typed, for lines that are in edit mode
+	let edits = $state<Record<number, number | null>>({});
 
-	const recalcLines = (quotes: Quote[], ratecard: Rate[]) => {
-		lines = quotes.map((q) => {
-			const rate = ratecard.find((r) => r['id'] === q.id) as Rate;
-			return Object.assign(q, {
-				editing: false,
+	const lines = $derived.by((): Line[] => {
+		const rates = new Map(($ratecard ?? []).map((r: Rate) => [r.id, r]));
+		return ($quotes ?? []).map((q: Quote) => {
+			const rate = rates.get(q.id);
+			// Never price a quote from a rate for another part, or from no rate at all
+			if (!rate || rate['Product Part'] !== q.part) {
+				const unpriced = { rate: 0, uom: '', name: '', multiplier: 0, ppm: 0, discount: 0 };
+				return { ...q, ...unpriced, missing: true };
+			}
+			const multiplier = uomMultiplier(rate.UOM);
+			return {
+				...q,
+				missing: false,
 				rate: rate['Net Unit Price'],
 				uom: rate.UOM,
 				name: rate['Product Name'],
-				multiplier: uomMultiplier(rate.UOM),
-				ppm: q.quantity * uomMultiplier(rate.UOM) * rate['Net Unit Price'],
+				multiplier,
+				ppm: q.quantity * multiplier * rate['Net Unit Price'],
 				discount: rate.Discount
-			});
+			};
 		});
-	};
+	});
 
-	const recalcTotals = (lines: Line[]) => {
-		tpm = lines.length > 0 ? lines.map((a) => a.ppm).reduce((a, b) => a + b) : 0;
-	};
+	const tpm = $derived(lines.reduce((sum, line) => sum + line.ppm, 0));
 
 	const removeProduct = async (line: Line) => {
+		delete edits[line.id];
 		await db.quotes.delete(line.id);
 	};
 
-	const changeProduct = async (line: Line, e: undefined | KeyboardEvent = undefined) => {
+	const saveQuantity = async (line: Line, e: undefined | KeyboardEvent = undefined) => {
 		if (e && e.key !== 'Enter') return;
-		line.editing = false;
-		await db.quotes.update(line.id, { quantity: line.quantity });
+		const quantity = edits[line.id];
+		delete edits[line.id];
+		// an emptied field keeps the quantity the line had
+		if (typeof quantity === 'number') await db.quotes.update(line.id, { quantity });
 	};
 
-	const xlsx = () => exportToXls(lines);
-
-	$effect(() => {
-		if ($quotes && $quotes.length >= 0 && $ratecard && $ratecard.length >= 0)
-			recalcLines($quotes, $ratecard);
-	});
-
-	$effect(() => {
-		if (lines) recalcTotals(lines);
-	});
+	const xlsx = () => exportToXls(lines.filter((line) => !line.missing));
 </script>
 
 {#if $quotes && $quotes.length > 0}
@@ -64,50 +65,47 @@
 				<th class="px-2 text-left">Discount</th>
 			</tr>
 		</thead>
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<tbody>
 			{#each lines as line (line.id)}
 				<tr>
 					<td class="px-2" onclick={() => removeProduct(line)}>
-						<iconify-icon
-							class="cursor-pointer text-poppy outline-none"
-							icon="mdi:trash-can-outline"
-							height="16"
-							noobserver
-						></iconify-icon>
+						<Icon icon="trash-can-outline" size={16} class="cursor-pointer text-poppy" />
 					</td>
 					<td class="px-2 font-semibold text-black dark:text-white">{line?.part}</td>
-					<td class="px-2">{line?.name}</td>
-					<td class="px-2">{line?.uom}</td>
-					<td class="px-2 font-semibold text-black dark:text-white">{line?.rate}</td>
-					{#if line.editing}
+					{#if line.missing}
+						<td class="px-2 text-poppy" colspan="3">
+							not in the loaded ratecard: remove this line and add it again
+						</td>
+					{:else}
+						<td class="px-2">{line?.name}</td>
+						<td class="px-2">{line?.uom}</td>
+						<td class="px-2 font-semibold text-black dark:text-white">{line?.rate}</td>
+					{/if}
+					{#if line.id in edits}
 						<td class="flex flex-row items-center gap-2 px-2">
-							<iconify-icon
-								onclick={() => changeProduct(line)}
-								class="cursor-pointer text-green-500 outline-none"
-								icon="mdi:content-save-check-outline"
-								height="16"
-								noobserver
-							></iconify-icon>
+							<Icon
+								icon="content-save-check-outline"
+								size={16}
+								class="cursor-pointer text-green-500"
+								onclick={() => saveQuantity(line)}
+							/>
 							<input
 								class="m-0 border-gray-300 bg-gray-100 py-0 pr-0 pl-1 font-mono text-xs dark:border-gray-500 dark:bg-gray-700 dark:text-white"
 								type="number"
 								min="0"
 								max="999999999"
-								bind:value={line.quantity}
-								onkeyup={(e) => changeProduct(line, e)}
+								bind:value={edits[line.id]}
+								onkeyup={(e) => saveQuantity(line, e)}
 							/>
 						</td>
 					{:else}
 						<td class="flex flex-row items-center gap-2 px-2">
-							<iconify-icon
-								onclick={() => (line.editing = true)}
-								class="cursor-pointer text-lime-400 outline-none"
-								icon="mdi:edit"
-								height="16"
-								noobserver
-							></iconify-icon>
+							<Icon
+								icon="edit"
+								size={16}
+								class="cursor-pointer text-lime-400"
+								onclick={() => (edits[line.id] = line.quantity)}
+							/>
 							{line?.quantity}
 						</td>
 					{/if}

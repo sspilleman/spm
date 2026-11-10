@@ -1,10 +1,10 @@
 import type { Computation, ComputationSourceColumns } from '#lib/interfaces/index.ts';
 import { readFile } from '#lib/utils.ts';
 import * as d3 from 'd3';
-import { cleanName, parseYMDDate } from './helpers';
+import { cleanName, dropTrailer, parseYMDDate } from './helpers';
 
 const rowCoverter = (r: d3.DSVRowString<ComputationSourceColumns>) => {
-	const pp = r['SKU/Product'].split(` - `);
+	const pp = (r['SKU/Product'] ?? '').split(` - `);
 	const [part, name] = [pp[0], pp.slice(1).join(` - `)];
 	return {
 		'Subscription Plan Number': r['Subscription Plan Number'],
@@ -27,6 +27,5 @@ const rowCoverter = (r: d3.DSVRowString<ComputationSourceColumns>) => {
 export const parseComputation = async (file: File) => {
 	const txt = await readFile(file);
 	const rows = await d3.csvParse(txt, rowCoverter);
-	rows.pop();
-	return rows;
+	return dropTrailer(rows, (row) => !!row.SKU);
 };

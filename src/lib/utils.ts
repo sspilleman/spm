@@ -1,12 +1,6 @@
-export function readFile(file: File): Promise<string> {
-	const fileReader = new FileReader();
-	return new Promise((resolve) => {
-		fileReader.onload = function (e: ProgressEvent<FileReader>) {
-			return resolve(e.target?.result as string);
-		};
-		fileReader.readAsBinaryString(file);
-	});
-}
+// Blob.text() decodes the file as UTF-8 and strips a byte order mark.
+// (readAsBinaryString returned raw bytes, which mangled every non-ASCII character.)
+export const readFile = (file: File): Promise<string> => file.text();
 
 const words = [
 	['10000', '10,000'],

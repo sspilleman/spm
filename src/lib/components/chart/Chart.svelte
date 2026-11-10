@@ -11,4 +11,4 @@
 	let { options }: Props = $props();
 </script>
 
-<div class="highcharts aspect-[6/3] w-[600px]" use:highcharts={options}></div>
+<div class="highcharts aspect-[6/3] w-[600px]" use:highcharts={() => options}></div>

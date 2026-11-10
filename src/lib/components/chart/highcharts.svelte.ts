@@ -1,9 +1,11 @@
 import type { Action } from 'svelte/action';
 import Highcharts from 'highcharts';
 
-export const highcharts: Action<HTMLElement, Highcharts.Options> = (
+// Takes a function, not the options themselves: an action runs once, so reading the options
+// inside the effect is what makes the chart get rebuilt when they change.
+export const highcharts: Action<HTMLElement, () => Highcharts.Options> = (
 	node: HTMLElement,
-	options: Highcharts.Options
+	options: () => Highcharts.Options
 ) => {
 	// const test = () => {
 	//     // node.dispatchEvent(new CustomEvent("titleclick"));
@@ -11,7 +13,7 @@ export const highcharts: Action<HTMLElement, Highcharts.Options> = (
 	// };
 
 	$effect(() => {
-		const chart = Highcharts.chart(node, options);
+		const chart = Highcharts.chart(node, options());
 		// let title: Element | undefined;
 		// setTimeout(() => {
 		//     const titles = node.getElementsByClassName("highcharts-title");

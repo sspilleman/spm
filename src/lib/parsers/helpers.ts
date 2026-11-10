@@ -10,26 +10,35 @@ export const displayDate = (value: Date) => {
 	return format(value, 'dd MMM yyyy');
 };
 
+// Dates are built in one step, at 02:00 local time. Setting day, month and year one by one
+// on a fixed base date rolls over: day 31 on a 30-day base month becomes the 1st.
+const localDate = (year: string, month: string, day: string) =>
+	new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10), 2);
+
+// Returned when the value does not match the expected format
+const unknownDate = () => new Date('1972-09-10T02:00:00');
+
 export const parseMDYDate = (value: string) => {
-	const date = new Date('1972-09-10T02:00:00');
 	const r = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
-	if (r && r.length === 4) {
-		date.setDate(parseInt(r[2], 10));
-		date.setMonth(parseInt(r[1], 10) - 1);
-		date.setFullYear(parseInt(r[3], 10));
-	}
-	return date;
+	return r ? localDate(r[3], r[1], r[2]) : unknownDate();
 };
 
 export const parseYMDDate = (value: string) => {
-	const date = new Date('1972-09-10T02:00:00');
 	const r = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-	if (r && r.length === 4) {
-		date.setDate(parseInt(r[3], 10));
-		date.setMonth(parseInt(r[2], 10) - 1);
-		date.setFullYear(parseInt(r[1], 10));
-	}
-	return date;
+	return r ? localDate(r[1], r[2], r[3]) : unknownDate();
+};
+
+// Oracle writes large quantities with thousands separators ("999,999,999"), and parseFloat
+// alone stops at the first comma
+export const parseQuantity = (value: string | undefined) =>
+	parseFloat((value ?? '').replace(/,/g, ''));
+
+// Some Oracle exports end with a summary line such as "Confidential Oracle Restricted".
+// Drop the last row only when it is that line (it has no key value), never a real record.
+export const dropTrailer = <T>(rows: T[], hasKey: (row: T) => boolean) => {
+	const last = rows.at(-1);
+	if (last && !hasKey(last)) rows.pop();
+	return rows;
 };
 
 export const cleanName = (value: string) =>
@@ -62,6 +71,9 @@ export const splitValues = (line: string) => {
 	}
 	return result;
 };
+
+export const HOURS_PER_MONTH = 730;
+export const DAYS_PER_MONTH = HOURS_PER_MONTH / 24;
 
 export const uomMultiplier = (uom: string) => {
 	switch (uom) {
@@ -105,7 +117,6 @@ export const uomMultiplier = (uom: string) => {
 		case 'PERF UN PR GB PR MO':
 		case 'READ UNIT PER MONTH':
 		case 'REQUEST':
-		case 'RSRC POSS PR DY':
 		case 'TB STORAGE CAP PER MONTH':
 		case 'TGT DB PR MO':
 		case 'TOKN':
@@ -117,7 +128,6 @@ export const uomMultiplier = (uom: string) => {
 		case '10000 TRANSACTIONS':
 		case 'GB STG RTRD PR MO':
 		case 'HSTD ENVIRONMENT PER MO':
-		case 'HSM PRTN PR HR':
 		case 'ANOT DATA REC':
 		case 'HOST CPU CORE PR MO': // new
 		case '1 MNAG RSRC PR MO':
@@ -176,7 +186,10 @@ export const uomMultiplier = (uom: string) => {
 		case 'GPU MNTR UNIT PR HR':
 		case 'EPT PER HR':
 		case 'CLST HR':
-			return 730;
+		case 'HSM PRTN PR HR':
+			return HOURS_PER_MONTH;
+		case 'RSRC POSS PR DY':
+			return DAYS_PER_MONTH;
 		default:
 			console.log(`==>${uom} unknown`);
 			break;

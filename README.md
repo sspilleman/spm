@@ -54,11 +54,10 @@ The dev server runs on **http://localhost:4000** and listens on all interfaces (
 
 `static/` has example exports you can load right away:
 
-| File                             | Loads as    | Notes                                    |
-| -------------------------------- | ----------- | ---------------------------------------- |
-| `static/ratecard 2026-02-26.csv` | Ratecard    | Current export format                    |
-| `static/computation.csv`         | Computation |                                          |
-| `static/usage.csv`               | (disabled)  | The usage view is currently switched off |
+| File                             | Loads as    | Notes                 |
+| -------------------------------- | ----------- | --------------------- |
+| `static/ratecard 2026-02-26.csv` | Ratecard    | Current export format |
+| `static/computation.csv`         | Computation |                       |
 
 ---
 
@@ -68,14 +67,13 @@ The dev server runs on **http://localhost:4000** and listens on all interfaces (
 
 The header has a file input that accepts one or more `.csv` files. The **filename** decides what each file is:
 
-| Filename contains | Goes to                           |
-| ----------------- | --------------------------------- |
-| `ratecard`        | the ratecard table                |
-| `computation`     | the computation table             |
-| `usage`           | ignored (the feature is disabled) |
-| anything else     | rejected with an alert            |
+| Filename contains | Goes to                |
+| ----------------- | ---------------------- |
+| `ratecard`        | the ratecard table     |
+| `computation`     | the computation table  |
+| anything else     | rejected with an alert |
 
-The check ignores case, and the file must have the `text/csv` MIME type. Loading a file **replaces** everything that was in its table before.
+The check ignores case, and the filename must end in `.csv`. Loading a file **replaces** everything that was in its table before.
 
 Next to the file input, the header shows a green or red dot for each dataset to tell you whether it is loaded. The home page only shows a tile for a dataset once it is loaded. The sun/moon button in the top-right switches dark mode.
 
@@ -117,15 +115,16 @@ The parsers expect these columns. Any other columns are ignored.
 
 ### Ratecard (`*ratecard*.csv`)
 
-| Source column            | Used as         | Format / notes                       |
-| ------------------------ | --------------- | ------------------------------------ |
-| `Part Num`               | Product Part    |                                      |
-| `Product Name`           | Product Name    | Oracle prefixes are removed          |
-| `Start Date`, `End Date` | validity window | `dd-MMM-yyyy`, such as `28-Dec-2025` |
-| `Net Unit Price (USD)`   | Net Unit Price  | number                               |
-| `Usage Max`              | Max Quantity    | number, or `-` for no tier           |
-| `Rate Card Discount (%)` | Discount        | number                               |
-| `UOM`                    | UOM             | must be known to `uomMultiplier`     |
+| Source column            | Used as         | Format / notes                              |
+| ------------------------ | --------------- | ------------------------------------------- |
+| `Row WID`                | id              | Oracle's ID for the rate line               |
+| `Part Num`               | Product Part    |                                             |
+| `Product Name`           | Product Name    | Oracle prefixes are removed                 |
+| `Start Date`, `End Date` | validity window | `dd-MMM-yyyy`, such as `28-Dec-2025`        |
+| `Net Unit Price (LC)`    | Net Unit Price  | number, in the contract currency            |
+| `Usage Max`              | Max Quantity    | number such as `10,240`, or `-` for no tier |
+| `Rate Card Discount (%)` | Discount        | number                                      |
+| `UOM`                    | UOM             | must be known to `uomMultiplier`            |
 
 `Active` is calculated from the start and end dates when the file is read.
 
@@ -139,18 +138,19 @@ The parsers expect these columns. Any other columns are ignored.
 | `Computed Amount CD`                                                                                                                           | read but not used yet                                    |
 | `Usage Quantity`, `UOM`, `Compute Type`, `Currency`, `Overage`, `Data Center`, `Unit Rate Card`, `Subscription Plan Number`, `Subscription Id` | read and stored                                          |
 
-Both parsers drop the last parsed row, because Oracle's exports end with an empty or summary line.
+Some Oracle exports end with a summary line such as `Confidential Oracle Restricted`. Both parsers drop the last parsed row only when it is such a line (it has no part number or SKU).
 
 ---
 
 ## How prices are calculated
 
-Oracle prices each part in its own UOM. To turn a unit price into a monthly cost, `uomMultiplier()` in `src/lib/parsers/helpers.ts` puts each UOM in one of two groups:
+Oracle prices each part in its own UOM. To turn a unit price into a monthly cost, `uomMultiplier()` in `src/lib/parsers/helpers.ts` puts each UOM in one of three groups:
 
-| Group                                                                 | Multiplier                 |
-| --------------------------------------------------------------------- | -------------------------- |
-| Per hour (`OCPU PER HOUR`, `GB PR HR`, `LOAD BALANCER HOUR`, …)       | **730** (hours in a month) |
-| Per month or per unit (`GB PR MO`, `1M API CALLS PER MONTH`, `EA`, …) | **1**                      |
+| Group                                                                 | Multiplier                     |
+| --------------------------------------------------------------------- | ------------------------------ |
+| Per hour (`OCPU PER HOUR`, `GB PR HR`, `LOAD BALANCER HOUR`, …)       | **730** (hours in a month)     |
+| Per day (`RSRC POSS PR DY`)                                           | **730 / 24** (days in a month) |
+| Per month or per unit (`GB PR MO`, `1M API CALLS PER MONTH`, `EA`, …) | **1**                          |
 
 So:
 
@@ -159,7 +159,7 @@ monthly = quantity × multiplier × net unit price
 yearly  = 12 × monthly
 ```
 
-> **Unknown UOMs are priced at 0.** If a UOM isn't in either list, `uomMultiplier` logs `==>{UOM} unknown` to the browser console and returns `0`. When Oracle introduces a new UOM string, add it to the right group in `helpers.ts`.
+> **Unknown UOMs are priced at 0.** If a UOM isn't in any of the lists, `uomMultiplier` logs `==>{UOM} unknown` to the browser console and returns `0`. When Oracle introduces a new UOM string, add it to the right group in `helpers.ts`.
 
 ---
 
@@ -170,16 +170,18 @@ The export uses the template `static/sizing.xlsx`:
 1. It fetches `/sizing.xlsx` and opens it with ExcelJS.
 2. On the worksheet named **`Quote`**, it writes one row per proposal line, starting at **row 5**:
 
-   | Column | Value                                                                                                      |
-   | ------ | ---------------------------------------------------------------------------------------------------------- |
-   | C      | Product name, with trailing UOM words removed (`cleanName` in `src/lib/utils.ts`)                          |
-   | D      | Part number                                                                                                |
-   | E      | UOM                                                                                                        |
-   | F      | Quantity                                                                                                   |
-   | G      | Net unit price                                                                                             |
-   | H      | Formula: `=G{row}` for monthly UOMs, `=$D$2*G{row}` for hourly UOMs (`D2` holds the hours-per-month value) |
+   | Column | Value                                                                                                                                           |
+   | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+   | C      | Product name, with trailing UOM words removed (`cleanName` in `src/lib/utils.ts`)                                                               |
+   | D      | Part number                                                                                                                                     |
+   | E      | UOM                                                                                                                                             |
+   | F      | Quantity                                                                                                                                        |
+   | G      | Net unit price                                                                                                                                  |
+   | H      | Formula: `=G{row}` for monthly UOMs, `=$D$2*G{row}` for hourly UOMs and `=$D$2/24*G{row}` for daily UOMs (`D2` holds the hours-per-month value) |
 
 3. It downloads the result as **`formulae.xlsx`**.
+
+The template has room for **200 proposal lines** (rows 5 to 204). Columns I and J hold the template's own formulas (`=F{row}*H{row}` and `=12*I{row}`), and the Total row is row 205 (`=SUM(I5:I204)`, `=SUM(J5:J204)`). A proposal with more than 200 lines writes over the Total row.
 
 To change the layout of the export, edit `static/sizing.xlsx`. If you move the `Quote` sheet, the start row or the columns, update `src/routes/ratecard/exceljs.ts` to match.
 
@@ -193,16 +195,16 @@ src/
 ├── app.html
 ├── lib/
 │   ├── db.ts                   Dexie database + liveQuery stores
-│   ├── utils.ts                FileReader helper, export name cleanup
+│   ├── utils.ts                file reading helper, export name cleanup
 │   ├── interfaces/             Rate, Quote/Line, Computation (+ CSV column types)
 │   ├── parsers/
 │   │   ├── ratecard.ts         ratecard CSV → Rate[]
 │   │   ├── computation.ts      computation CSV → Computation[]
-│   │   ├── usage.ts            (disabled)
 │   │   └── helpers.ts          date parsing, name cleanup, uomMultiplier
 │   └── components/
 │       ├── Header.svelte       nav, file upload, load indicators, dark mode
 │       ├── Logo.svelte
+│       ├── Icon.svelte         inline SVG icons from icons.ts
 │       └── chart/              Highcharts action + Line / Column / Pie wrappers
 └── routes/
     ├── +layout.ts              ssr = false
@@ -211,7 +213,6 @@ src/
     ├── ratecard/               Table (lookup), Proposal, ExcelJS export
     └── computation/            per-SKU cost charts
 static/                         sample CSVs, Excel template, fonts, icons
-disabled/usage/                 the parked usage page
 vite.config.ts                  Vite + SvelteKit config (adapter, preprocess); there is no svelte.config.js
 deno.json                       Deno's minimum dependency age setting
 ```
@@ -238,9 +239,9 @@ Code in `src/lib` is imported through the `#lib` subpath import declared in `pac
   - `quotes` (key `id`): proposal lines `{ id, part, quantity }`
   - `computation` (key `++id`, index `SKU`): the parsed computation export
 - **Reactivity.** `db.ts` exports Dexie `liveQuery` observables (`ratecard`, `quotes`, `computation`). Components use them like Svelte stores (`$ratecard`), so any write to IndexedDB re-renders the components that read it.
-- **Quotes reference rates by ID.** When a ratecard is read, its rows get sequential IDs. A quote stores the `id` of the rate it was added from, and the proposal joins quotes to rates on that ID.
-- **Charts.** `src/lib/components/chart/highcharts.svelte.ts` is a Svelte action that creates a Highcharts chart inside `$effect` and destroys it on cleanup. The wrapper components use `Highcharts.merge` to combine the options you pass in with their defaults (styled mode, no animation, x-zoom). Where both set the same option, the default wins. Chart styling comes from `highcharts.css`.
-- **UI.** The app uses [flowbite-svelte](https://flowbite-svelte.com/) **2.0.0-next.13**, a prerelease pinned on purpose. It also uses Tailwind 4 through `@tailwindcss/vite`, with its config in `src/app.css` and no `tailwind.config.*` file, class-based dark mode and [Iconify](https://iconify.design/) web components.
+- **Quotes reference rates by ID.** A rate's `id` is Oracle's `Row WID`, which stays the same from one export to the next. A quote stores the `id` and part number of the rate it was added from, and the proposal joins quotes to rates on that ID. If the ID is not in the loaded ratecard, or now belongs to another part, the line is marked as missing and is not priced. A ratecard without a usable `Row WID` column gets row numbers as IDs instead.
+- **Charts.** `src/lib/components/chart/highcharts.svelte.ts` is a Svelte action that creates a Highcharts chart inside `$effect` and destroys it on cleanup. It takes a function that returns the options, so the chart is rebuilt when the options change. The wrapper components use `Highcharts.merge` to combine the options you pass in with their defaults (styled mode, no animation, x-zoom). Where both set the same option, the default wins. Chart styling comes from `highcharts.css`.
+- **UI.** The app uses [flowbite-svelte](https://flowbite-svelte.com/) **2.0.0-next.13**, a prerelease pinned on purpose. It also uses Tailwind 4 through `@tailwindcss/vite`, with its config in `src/app.css` and no `tailwind.config.*` file, class-based dark mode and a local `Icon.svelte` component. Its icons (Material Design Icons, Apache 2.0) are stored in `src/lib/components/icons.ts`, so no icon is fetched at runtime.
   - flowbite-svelte v2 styles its components with Flowbite's design tokens (`bg-brand`, `text-body`, `rounded-base`, …), which come from `flowbite/src/themes/default`.
   - That theme also changes the fonts and Tailwind's radius scale. The `@theme` block in `app.css` switches both back.
   - The Titillium and Hack fonts are served locally from `static/fonts`.
@@ -303,7 +304,7 @@ deno task build
 deno task preview
 ```
 
-`deploy.sh` is a shortcut that stages everything, commits with a timestamp as the message and pushes.
+`deploy.sh` is a shortcut for publishing the source. It runs lint, type check and build, stages everything, lists what it is about to publish and asks for confirmation, then commits with a timestamp as the message and pushes to `origin`. `./deploy.sh -y` skips the question. It stops at the first failing step.
 
 > The app used to run on Deno Deploy Classic with `svelte-adapter-deno`. Deno shut Deploy Classic down on 2026-07-20, and neither Deno adapter supports SvelteKit 3.
 
@@ -311,9 +312,8 @@ deno task preview
 
 ## Known limitations
 
-- **Reloading a ratecard can break the proposal.** Quotes point at rate IDs, and those IDs are assigned again every time a ratecard is read. If the new file has its rows in a different order or a different number of rows, existing proposal lines can show the wrong rate. Clear the proposal after loading a new ratecard.
-- **Currency labels.** The ratecard is read from `Net Unit Price (USD)`, but the lookup and proposal show amounts with an `EUR` label.
+- **A new ratecard can leave proposal lines without a rate.** A proposal line whose rate is not in the newly loaded ratecard is shown as "not in the loaded ratecard", counts as 0 in the totals and is left out of the Excel export. Remove it and add it again. This also happens to lines added before rates were identified by `Row WID`.
+- **Currency labels.** The ratecard is read from `Net Unit Price (LC)`, the contract currency, and the lookup and proposal always label amounts `EUR`. A ratecard in another currency shows the right numbers with the wrong label.
 - **The old ratecard format no longer parses.** Older ratecard exports with `Product Part` / `Net Unit Price` columns and `MM-dd-yyyy` dates load with empty prices, dates and part numbers. Use the current export format instead.
 - **Unknown UOMs are priced at 0.** See [How prices are calculated](#how-prices-are-calculated).
-- **The usage view is disabled.** The usage parser, its Dexie table, its nav entry and its home tile are commented out in `db.ts`, `parsers/index.ts`, `interfaces/index.ts`, `Header.svelte` and `routes/+page.svelte`, and its page is in `disabled/usage/`. To turn it back on, uncomment all of these and move the page back under `src/routes/usage/`.
 - **Clearing site data deletes everything.** All data lives in the browser's IndexedDB, so clearing site data removes every loaded file and the proposal.

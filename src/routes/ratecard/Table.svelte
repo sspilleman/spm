@@ -3,8 +3,16 @@
 	import { ButtonGroup, Input, InputAddon } from 'flowbite-svelte';
 	import { displayDate, uomMultiplier } from '#lib/parsers/helpers.ts';
 	import type { Rate } from '#lib/interfaces/index.ts';
+	import Icon from '#lib/components/Icon.svelte';
 
-	let ratecardFiltered: Rate[] = $state([]);
+	let query = $state('');
+
+	const ratecardFiltered = $derived.by(() => {
+		const rates: Rate[] = $ratecard ?? [];
+		if (query.length === 0) return rates;
+		const txt = query.toLocaleLowerCase();
+		return rates.filter((r) => r.Active && JSON.stringify(r).toLocaleLowerCase().includes(txt));
+	});
 
 	const addProduct = async (rate: Rate) => {
 		const count = await db.quotes.where('id').equals(rate['id']).count();
@@ -12,28 +20,13 @@
 		const quote = { id: rate.id, part: rate['Product Part'], quantity: 1 };
 		await db.quotes.add(quote);
 	};
-
-	const ratesearch = async (e: null | EventTarget) => {
-		const txt = (e as HTMLInputElement).value;
-		if (txt.length === 0) ratecardFiltered = $ratecard;
-		else {
-			const filter = (r: Rate) =>
-				r.Active && JSON.stringify(r).toLocaleLowerCase().includes(txt.toLocaleLowerCase());
-			ratecardFiltered = $ratecard.filter(filter);
-		}
-	};
-
-	$effect(() => {
-		if ($ratecard) ratecardFiltered = $ratecard;
-	});
 </script>
 
 <ButtonGroup class="w-full">
 	<InputAddon>
-		<iconify-icon class="text-black dark:text-white" icon="mdi:search" height="20" noobserver
-		></iconify-icon>
+		<Icon icon="search" size={20} class="text-black dark:text-white" />
 	</InputAddon>
-	<Input type="search" placeholder="search" oninput={(e) => ratesearch(e.target)}></Input>
+	<Input type="search" placeholder="search" bind:value={query}></Input>
 </ButtonGroup>
 
 <table class="mt-4 font-mono text-xs">
@@ -53,16 +46,13 @@
 	</thead>
 	<tbody>
 		{#each ratecardFiltered as rate (rate.id)}
-			{@const quantity = !Number.isNaN(rate['Max Quantity']) ? rate['Max Quantity'] : ''}
+			{@const quantity = !Number.isNaN(rate['Max Quantity'])
+				? rate['Max Quantity'].toLocaleString('en-US')
+				: ''}
 			{@const multiplier = uomMultiplier(rate['UOM'])}
 			<tr>
 				<td class="px-2 py-0" onclick={() => addProduct(rate)}>
-					<iconify-icon
-						class="text-lime-400 outline-none"
-						icon="mdi:plus-circle-outline"
-						height="20"
-						noobserver
-					></iconify-icon>
+					<Icon icon="plus-circle-outline" size={20} class="text-lime-400" />
 				</td>
 				<td class="px-2 font-semibold text-black dark:text-white">{rate['Product Part']}</td>
 				<!-- <td class="px-2">{cleanName(rate['Product Name'], rate['UOM'])}</td> -->

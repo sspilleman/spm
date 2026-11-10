@@ -1,6 +1,7 @@
 import type { Line } from '#lib/interfaces/index.ts';
 import Excel, { type Row, type Workbook, type Worksheet } from 'exceljs';
 import { cleanName } from '#lib/utils.ts';
+import { DAYS_PER_MONTH, HOURS_PER_MONTH } from '#lib/parsers/helpers.ts';
 
 const type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -18,7 +19,10 @@ const changeWorkBook = (workbook: Workbook, lines: Line[]) => {
 		let idx = 5;
 		for (const line of lines) {
 			const row: Row = worksheet.getRow(idx);
-			const formula = line.multiplier === 1 ? `G${idx}` : `$D$2*G${idx}`;
+			// D2 holds the hours per month
+			let formula = `G${idx}`;
+			if (line.multiplier === HOURS_PER_MONTH) formula = `$D$2*G${idx}`;
+			else if (line.multiplier === DAYS_PER_MONTH) formula = `$D$2/24*G${idx}`;
 			row.getCell('C').value = cleanName(line.name, line.uom);
 			row.getCell('D').value = line.part;
 			row.getCell('E').value = line.uom;

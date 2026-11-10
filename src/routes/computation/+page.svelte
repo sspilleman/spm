@@ -5,23 +5,39 @@
 	import type { Computation } from '#lib/interfaces/index.ts';
 	import type Highcharts from 'highcharts';
 
-	let charts: Record<string, Highcharts.Options> = $state({});
-	let skus = $state<string[]>([]);
 	let selectedskus = $state<string[]>([]);
 
-	const createCharts = () => {
-		charts = skus.reduce(
+	// Everything below is derived from the loaded records, so the SKU list, the names and the
+	// charts all change together when a new file is loaded.
+	const records = $derived<Computation[]>($computation ?? []);
+	const skus = $derived([...new Set(records.map((r) => r.SKU))]);
+	const names = $derived(
+		skus.reduce(
+			(prev, cur) => {
+				prev[cur] = records.find((c) => c.SKU === cur)?.Product ?? cur;
+				return prev;
+			},
+			{} as Record<string, string>
+		)
+	);
+	const name = (sku: string) =>
+		(names[sku] ?? sku).replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
+
+	const charts = $derived(
+		skus.reduce(
 			(prev, sku) => {
-				const records = $computation.filter((u) => u['SKU'] === sku);
-				const byDate = Object.groupBy(records, (r) => r['Metered Service Date'].getTime());
+				const byDate = Object.groupBy(
+					records.filter((u) => u.SKU === sku),
+					(r) => r['Metered Service Date'].getTime()
+				);
 				const data = Object.keys(byDate)
 					.sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
 					.map((d) => {
 						const date = parseInt(d, 10);
-						const total = byDate[date]?.reduce((prev: number, cur: Computation) => {
-							prev += cur['Computed Amount'];
-							return prev;
-						}, 0) as number;
+						const total = (byDate[date] ?? []).reduce(
+							(sum, cur) => sum + cur['Computed Amount'],
+							0
+						);
 						return [date, parseFloat(total.toFixed(10))];
 					});
 				prev[sku] = {
@@ -34,11 +50,8 @@
 				return prev;
 			},
 			{} as Record<string, Highcharts.Options>
-		);
-	};
-	const createParts = (records: Computation[]) => {
-		skus = [...new Set(records.map((s) => s['SKU']))];
-	};
+		)
+	);
 
 	// const findChanged = (days: number) => {
 	// 	parts_selected = parts.reduce((prev, part) => {
@@ -55,27 +68,6 @@
 	// 		return prev;
 	// 	}, [] as string[]);
 	// };
-
-	// $effect(() => {
-	// 	console.log('selectedskus', selectedskus);
-	// });
-	$effect(() => {
-		if ($computation?.length > 0) createParts($computation);
-	});
-	$effect(() => {
-		if (skus.length > 0) createCharts();
-	});
-	let names: Record<string, string> = $derived.by(() =>
-		skus.reduce(
-			(prev, cur) => {
-				prev[cur] = $computation.find((c) => c.SKU === cur)?.Product as string;
-				return prev;
-			},
-			{} as Record<string, string>
-		)
-	);
-	const name = (sku: string) =>
-		names[sku].replace(/[ -]*Metered[ -]*(I|P)aaS$/i, '').replace(/[ -]*Metered$/i, '');
 </script>
 
 <svelte:head>
@@ -115,6 +107,9 @@
 <div class="mt-4 flex flex-row flex-wrap gap-4">
 	{#each selectedskus as sku (sku)}
 		{@const options = charts[sku]}
-		<Line {options} />
+		<!-- a selected SKU can be missing from a newly loaded file -->
+		{#if options}
+			<Line {options} />
+		{/if}
 	{/each}
 </div>
