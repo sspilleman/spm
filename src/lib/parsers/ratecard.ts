@@ -4,9 +4,6 @@ import * as d3 from 'd3';
 import { cleanName, dropTrailer, newDate, parseQuantity } from './helpers';
 
 const rowCoverter = (r: d3.DSVRowString<RateSourceColumns>) => {
-	const now = new Date();
-	let Active = newDate(r['End Date']) >= now;
-	if (Active) Active = newDate(r['Start Date']) <= now;
 	const row = {
 		'End Date': newDate(r['End Date']),
 		'Max Quantity': parseQuantity(r['Usage Max']),
@@ -14,7 +11,6 @@ const rowCoverter = (r: d3.DSVRowString<RateSourceColumns>) => {
 		'Product Name': cleanName(r['Product Name']),
 		'Product Part': r['Part Num'],
 		'Start Date': newDate(r['Start Date']),
-		Active,
 		Discount: parseFloat(r['Rate Card Discount (%)']),
 		id: Number(r['Row WID'] || NaN),
 		UOM: r['UOM']

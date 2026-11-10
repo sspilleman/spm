@@ -13,7 +13,6 @@ export type RateSourceColumns =
 	| 'UOM';
 export interface Rate {
 	id: number;
-	Active: boolean;
 	'End Date': Date;
 	Discount: number;
 	'Max Quantity': number;

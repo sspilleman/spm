@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ratecard, quotes, db } from '#lib/db.ts';
-	import { uomMultiplier } from '#lib/parsers/helpers.ts';
+	import { rateStatus, statusLabel, uomMultiplier } from '#lib/parsers/helpers.ts';
 	import { Button } from 'flowbite-svelte';
 	import type { Rate, Line, Quote } from '#lib/interfaces/index.ts';
 	import { exportToXls } from './exceljs';
@@ -9,6 +9,8 @@
 	// quote id -> the quantity being typed, for lines that are in edit mode
 	let edits = $state<Record<number, number | null>>({});
 
+	const now = new Date();
+
 	const lines = $derived.by((): Line[] => {
 		const rates = new Map(($ratecard ?? []).map((r: Rate) => [r.id, r]));
 		return ($quotes ?? []).map((q: Quote) => {
@@ -16,12 +18,13 @@
 			// Never price a quote from a rate for another part, or from no rate at all
 			if (!rate || rate['Product Part'] !== q.part) {
 				const unpriced = { rate: 0, uom: '', name: '', multiplier: 0, ppm: 0, discount: 0 };
-				return { ...q, ...unpriced, missing: true };
+				return { ...q, ...unpriced, missing: true, status: 'active' };
 			}
 			const multiplier = uomMultiplier(rate.UOM);
 			return {
 				...q,
 				missing: false,
+				status: rateStatus(rate, now),
 				rate: rate['Net Unit Price'],
 				uom: rate.UOM,
 				name: rate['Product Name'],
@@ -33,6 +36,10 @@
 	});
 
 	const tpm = $derived(lines.reduce((sum, line) => sum + line.ppm, 0));
+	// Lines priced from a rate that is not valid today
+	const inactive = $derived(
+		lines.filter((line) => !line.missing && line.status !== 'active').length
+	);
 
 	const removeProduct = async (line: Line) => {
 		delete edits[line.id];
@@ -67,7 +74,7 @@
 		</thead>
 		<tbody>
 			{#each lines as line (line.id)}
-				<tr>
+				<tr class={!line.missing && line.status !== 'active' ? 'bg-poppy/10' : ''}>
 					<td class="px-2" onclick={() => removeProduct(line)}>
 						<Icon icon="trash-can-outline" size={16} class="cursor-pointer text-poppy" />
 					</td>
@@ -77,7 +84,14 @@
 							not in the loaded ratecard: remove this line and add it again
 						</td>
 					{:else}
-						<td class="px-2">{line?.name}</td>
+						<td class="px-2">
+							{#if line.status !== 'active'}
+								<span class="mr-1 rounded bg-poppy px-1 font-semibold text-white"
+									>{statusLabel[line.status]}</span
+								>
+							{/if}
+							{line?.name}
+						</td>
 						<td class="px-2">{line?.uom}</td>
 						<td class="px-2 font-semibold text-black dark:text-white">{line?.rate}</td>
 					{/if}
@@ -130,6 +144,16 @@
 			</tr>
 		</tbody>
 	</table>
+	{#if inactive > 0}
+		<div
+			role="status"
+			class="my-3 rounded border-2 border-poppy bg-poppy/10 px-3 py-2 text-sm font-semibold text-poppy"
+		>
+			{inactive}
+			{inactive === 1 ? 'line uses a rate that is' : 'lines use rates that are'} not valid today. The
+			totals and the Excel export still include {inactive === 1 ? 'it' : 'them'}.
+		</div>
+	{/if}
 	<Button onclick={xlsx} size="sm" color="success">
 		<img class="me-2 h-6 w-6" src="./excel.svg" alt="" />export to xls
 	</Button>

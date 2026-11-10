@@ -93,8 +93,13 @@ Next to the file input, the header shows a green or red dot for each dataset to 
 | PPM       | Price per month for one unit (price × UOM multiplier, see below)     |
 | Discount  | Ratecard discount %                                                  |
 | Start/End | When the rate is valid                                               |
+| Status    | `valid`, `expired` or `not yet valid`, worked out from Start/End     |
 
-Typing in the search box filters the lines by a case-insensitive substring match on every field. Only **active** rates appear in search results, meaning rates whose start/end window includes today. Clicking ⊕ adds a line to the proposal. You can't add the same line twice.
+Typing in the search box filters the lines by a case-insensitive substring match on every field. Clicking ⊕ adds a line to the proposal. You can't add the same line twice.
+
+By default the lookup lists only rates that are **valid today**, meaning today falls within their start and end dates (the end date itself included). This is worked out from the dates each time the page is shown, so a rate drops out on the day after it ends without the ratecard being loaded again. A line above the table says how many rates are valid and how many are hidden.
+
+To look up an old price, switch on **Show expired rates**. A red notice then appears above the table, and every rate that is not valid today gets a red row and an `expired` (or `not yet valid`) label in the Status column.
 
 **Proposal** appears once at least one line has been added. For each line you can:
 
@@ -102,6 +107,8 @@ Typing in the search box filters the lines by a case-insensitive substring match
 - click 🗑 to remove the line
 
 Each row shows the monthly and yearly cost, and the last row adds them up. The proposal is saved in IndexedDB, so it is still there after a reload. **Export to xls** downloads the proposal as an Excel workbook (see [Excel export](#excel-export)).
+
+A proposal line whose rate is no longer valid today is marked `expired` on a red row, and a notice under the table counts those lines. They still count in the totals and in the Excel export.
 
 ### Computation: cost charts
 
@@ -126,7 +133,7 @@ The parsers expect these columns. Any other columns are ignored.
 | `Rate Card Discount (%)` | Discount        | number                                      |
 | `UOM`                    | UOM             | must be known to `uomMultiplier`            |
 
-`Active` is calculated from the start and end dates when the file is read.
+Whether a rate is valid is not stored. It is worked out from the start and end dates when the rate is shown (`rateStatus` in `src/lib/parsers/helpers.ts`).
 
 ### Computation (`*computation*.csv`)
 

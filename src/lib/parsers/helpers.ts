@@ -1,7 +1,30 @@
 import { format, parse } from 'date-fns';
+import type { Rate } from '#lib/interfaces/index.ts';
 
 export const newDate = (value: string) => {
 	return parse(value, 'dd-MMM-yyyy', new Date());
+};
+
+export type RateStatus = 'active' | 'expired' | 'upcoming';
+
+export const statusLabel: Record<RateStatus, string> = {
+	active: 'valid',
+	expired: 'expired',
+	upcoming: 'not yet valid'
+};
+
+// Whether a rate is valid at a given moment. This is worked out when a rate is shown, not when
+// the ratecard is loaded, so it stays right as time passes. A rate is valid through the whole of
+// its end date.
+export const rateStatus = (
+	rate: Pick<Rate, 'Start Date' | 'End Date'>,
+	at: Date = new Date()
+): RateStatus => {
+	const end = new Date(rate['End Date']);
+	end.setHours(23, 59, 59, 999);
+	if (at > end) return 'expired';
+	if (at < rate['Start Date']) return 'upcoming';
+	return 'active';
 };
 
 export const displayDate = (value: Date) => {

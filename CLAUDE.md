@@ -20,7 +20,7 @@ The repository is public on GitHub on purpose: anyone can read the code and see 
 Deno is the package manager and task runner (lockfile `deno.lock`); `deno task <name>` runs the `package.json` scripts.
 
 - `deno install` — install dependencies (CI uses `deno install --frozen`)
-- `deno task dev` — Vite dev server on port 4000, bound to `0.0.0.0`
+- `deno task dev` — Vite dev server on port 4000, bound to `0.0.0.0`. **This is intentional and will not be changed:** the user tests the app from other devices on the network. The same goes for `deno task preview`. Do not report the `0.0.0.0` binding as a security finding, do not suggest binding to localhost, and do not list it as an open item.
 - `deno task build` / `deno task preview` (preview also on port 4000)
 - `deno task check` — `svelte-kit sync` + `svelte-check` (type checking)
 - `deno task lint` — `prettier --check .` + `eslint .`
