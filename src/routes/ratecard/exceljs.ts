@@ -12,28 +12,45 @@ const getWorkBook = async (): Promise<Workbook> => {
 	return await workbook.xlsx.load(arrayBuffer);
 };
 
+// Proposal lines start on this row of the template
+const FIRST_ROW = 5;
+
+// The number of lines the template can take: its line rows end just above the "Total" row
+const capacity = (worksheet: Worksheet) => {
+	for (let row = FIRST_ROW; row <= worksheet.rowCount; row++) {
+		if (worksheet.getCell(`B${row}`).value === 'Total') return row - FIRST_ROW;
+	}
+	return Infinity;
+};
+
 const changeWorkBook = (workbook: Workbook, lines: Line[]) => {
 	const worksheet: Worksheet | undefined = workbook.getWorksheet('Quote');
-	if (worksheet) {
-		// console.log(worksheet.getCell("I11").value);
-		let idx = 5;
-		for (const line of lines) {
-			const row: Row = worksheet.getRow(idx);
-			// D2 holds the hours per month
-			let formula = `G${idx}`;
-			if (line.multiplier === HOURS_PER_MONTH) formula = `$D$2*G${idx}`;
-			else if (line.multiplier === DAYS_PER_MONTH) formula = `$D$2/24*G${idx}`;
-			row.getCell('C').value = cleanName(line.name, line.uom);
-			row.getCell('D').value = line.part;
-			row.getCell('E').value = line.uom;
-			row.getCell('F').value = line.quantity;
-			row.getCell('G').value = line.rate;
-			row.getCell('H').value = { formula };
-			++idx;
-		}
-		return true;
+	if (!worksheet) return false;
+	const max = capacity(worksheet);
+	if (lines.length > max) {
+		// Writing more lines would overwrite the Total row
+		alert(
+			`The Excel template has room for ${max} lines and this proposal has ${lines.length}. ` +
+				`Remove lines, or add rows to static/sizing.xlsx.`
+		);
+		return false;
 	}
-	return false;
+	let idx = FIRST_ROW;
+	for (const line of lines) {
+		const row: Row = worksheet.getRow(idx);
+		// D2 holds the hours per month
+		let formula = `G${idx}`;
+		if (line.multiplier === HOURS_PER_MONTH) formula = `$D$2*G${idx}`;
+		else if (line.multiplier === DAYS_PER_MONTH) formula = `$D$2/24*G${idx}`;
+		row.getCell('C').value = cleanName(line.name, line.uom);
+		row.getCell('D').value = line.part;
+		row.getCell('E').value = line.uom;
+		row.getCell('F').value = line.quantity;
+		row.getCell('G').value = line.rate;
+		row.getCell('H').value = { formula };
+		++idx;
+	}
+	return true;
 };
 
 const downloadWorkBook = async (workbook: Workbook) => {

@@ -43,6 +43,5 @@ export const cleanName = (name: string, uom: string) => {
 		}
 	}
 	name = name.replace(/ *- *$/, '');
-	// console.log('name', name);
 	return name.trim();
 };

@@ -65,10 +65,10 @@ There is no test suite.
 
 **Routes:**
 
-- `/ratecard`: `Table.svelte` (search the ratecard and add lines to `quotes`) and `Proposal.svelte` (joins quotes with rates and calculates per-month and per-year totals in EUR). `exceljs.ts` fetches the template `static/sizing.xlsx`, fills sheet `Quote` starting at row 5 (columns C–H, with formulas in H; the template has 200 line rows, 5–204, with its own I/J formulas, and the Total in row 205), and downloads `formulae.xlsx`. `xlsx.ts` is an old SheetJS version that is fully commented out.
+- `/ratecard`: `Table.svelte` (search the ratecard and add lines to `quotes`) and `Proposal.svelte` (joins quotes with rates and calculates per-month and per-year totals in EUR). `exceljs.ts` fetches the template `static/sizing.xlsx`, fills sheet `Quote` starting at row 5 (columns C–H, with formulas in H; the template has 200 line rows, 5–204, with its own I/J formulas, and the Total in row 205), and downloads `formulae.xlsx`. It reads the template's capacity from the position of the `Total` row and refuses to export, with an alert, when the proposal has more lines than that.
 - `/computation`: groups computation records by SKU and date, then renders one Highcharts line chart per selected SKU.
 
-**Charts** (`src/lib/components/chart/`): `highcharts.svelte.ts` is a Svelte action that creates and destroys a Highcharts chart inside `$effect`. It takes a function returning the options (`use:highcharts={() => options}`) so the chart is rebuilt when they change. `Line`/`Column`/`Pie.svelte` merge their default options with `Highcharts.merge(options, defaultOptions)` (defaults win) and render `Chart.svelte`. Charts use `styledMode`, so all styling comes from `highcharts.css` (a customized copy of Highcharts' stylesheet, with light/dark variables under `.highcharts` / `.dark .highcharts`). `highchart.ts` is unused.
+**Charts** (`src/lib/components/chart/`): `highcharts.svelte.ts` is a Svelte action that creates and destroys a Highcharts chart inside `$effect`. It takes a function returning the options (`use:highcharts={() => options}`) so the chart is rebuilt when they change. `Line`/`Column`/`Pie.svelte` merge their default options with `Highcharts.merge(options, defaultOptions)` (defaults win) and render `Chart.svelte`. Charts use `styledMode`, so all styling comes from `highcharts.css` (a customized copy of Highcharts' stylesheet, with light/dark variables under `.highcharts` / `.dark .highcharts`).
 
 ## Conventions
 

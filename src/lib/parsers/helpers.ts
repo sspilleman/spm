@@ -1,7 +1,5 @@
 import { format, parse } from 'date-fns';
 
-// console.log(parse("28-Dec-2025","dd-MMM-yyyy",new Date()))
-
 export const newDate = (value: string) => {
 	return parse(value, 'dd-MMM-yyyy', new Date());
 };

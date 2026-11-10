@@ -10,7 +10,6 @@
 
 	const change = async (e: null | EventTarget) => {
 		let files: FileList = (e as HTMLInputElement).files as FileList;
-		console.log(files);
 		for (const file of files) {
 			const name = file.name.toLocaleLowerCase();
 			// Go by the extension: the MIME type depends on the OS (Windows with Excel installed
@@ -27,11 +26,10 @@
 				}
 			} else if (csv && name.includes('computation')) {
 				const c = await parseComputation(file);
-				console.log(c);
 				if (c) {
 					await db.transaction('rw', db.computation, async () => {
 						await db.computation.clear();
-						console.log(await db.computation.bulkAdd(c));
+						await db.computation.bulkAdd(c);
 					});
 				}
 			} else {

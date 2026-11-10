@@ -181,7 +181,7 @@ The export uses the template `static/sizing.xlsx`:
 
 3. It downloads the result as **`formulae.xlsx`**.
 
-The template has room for **200 proposal lines** (rows 5 to 204). Columns I and J hold the template's own formulas (`=F{row}*H{row}` and `=12*I{row}`), and the Total row is row 205 (`=SUM(I5:I204)`, `=SUM(J5:J204)`). A proposal with more than 200 lines writes over the Total row.
+The template has room for **200 proposal lines** (rows 5 to 204). Columns I and J hold the template's own formulas (`=F{row}*H{row}` and `=12*I{row}`), and the Total row is row 205 (`=SUM(I5:I204)`, `=SUM(J5:J204)`). A proposal with more lines than the template holds is not exported; the app shows a message instead. The limit is read from the template itself: the line rows end just above the row whose column B says `Total`.
 
 To change the layout of the export, edit `static/sizing.xlsx`. If you move the `Quote` sheet, the start row or the columns, update `src/routes/ratecard/exceljs.ts` to match.
 

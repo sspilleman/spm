@@ -19,7 +19,6 @@ const rowCoverter = (r: d3.DSVRowString<RateSourceColumns>) => {
 		id: Number(r['Row WID'] || NaN),
 		UOM: r['UOM']
 	} as Rate;
-	if (r['Part Num'] === 'B110627') console.log(row);
 	return row;
 };
 
