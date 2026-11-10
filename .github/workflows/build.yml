@@ -1,0 +1,46 @@
+name: Build
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+jobs:
+  build:
+    name: Lint, check and build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          # Pinned to the version used locally; Vite 8's bundler (Rolldown) has had
+          # native-binding issues on some Deno releases.
+          deno-version: v2.9.8
+
+      - name: Install dependencies
+        run: deno install --frozen
+
+      - name: Lint
+        run: deno task lint
+
+      - name: Type check
+        run: deno task check
+
+      - name: Build
+        run: deno task build
+
+      # The app is a static SPA (adapter-static). Download this artifact and serve
+      # its contents from the web server, falling back to 200.html for unknown paths.
+      - name: Upload static site
+        uses: actions/upload-artifact@v7
+        with:
+          name: spm-site
+          path: build/
+          if-no-files-found: error

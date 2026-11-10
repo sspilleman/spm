@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { Usage } from '$lib/interfaces/index';
-	import { Button, Label } from 'svelte-5-ui-lib';
-	import Line from '$lib/components/chart/Line.svelte';
-	import { usage } from '$lib/db';
+	import { Button, Label } from 'flowbite-svelte';
+	import Line from '#lib/components/chart/Line.svelte';
+	import { usage } from '#lib/db.ts';
 	import type { PointOptionsObject } from 'highcharts';
 	import type Highcharts from 'highcharts';
 
@@ -82,26 +81,27 @@
 
 {#if parts && parts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button onclick={() => (parts_selected = [...parts])} size="sm" color="blue">select all</Button>
+		<Button onclick={() => (parts_selected = [...parts])} size="sm" color="brand">select all</Button
+		>
 		<Button onclick={() => (parts_selected = [])} size="sm" color="dark">select none</Button>
-		<Button onclick={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
-		<Button onclick={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
-		<Button onclick={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
-		<Button onclick={() => findChanged(9)} size="sm" color="green">modified 9 days</Button>
-		<Button onclick={() => findChanged(12)} size="sm" color="green">modified 12 days</Button>
+		<Button onclick={() => findChanged(1)} size="sm" color="success">modified 1 day</Button>
+		<Button onclick={() => findChanged(3)} size="sm" color="success">modified 3 days</Button>
+		<Button onclick={() => findChanged(6)} size="sm" color="success">modified 6 days</Button>
+		<Button onclick={() => findChanged(9)} size="sm" color="success">modified 9 days</Button>
+		<Button onclick={() => findChanged(12)} size="sm" color="success">modified 12 days</Button>
 	</div>
 	<ul class="mt-4 flex flex-row flex-wrap">
 		{#each parts as part (part)}
-			<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600 w-96">
+			<li class="w-96 rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
 				<!-- <Checkbox bind:group={parts_selected} value={part}>{cleanName(part)}</Checkbox> -->
 				<Label
-					class="text-sm rtl:text-right font-medium text-gray-900 dark:text-gray-300 flex items-center"
+					class="flex items-center text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300"
 				>
 					<input
 						bind:group={parts_selected}
 						type="checkbox"
 						value={part}
-						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lime-400 focus:ring-lime-400 dark:focus:ring-lime-400"
+						class="me-2 h-4 w-4 rounded border-gray-300 bg-gray-100 text-lime-400 focus:ring-2 focus:ring-lime-400 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-lime-400"
 					/>
 					{cleanName(part)}
 				</Label>
@@ -112,7 +112,7 @@
 
 {#if charts && charts.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-4">
-		{#each charts as options}
+		{#each charts as options (options.title?.text)}
 			{@const show = parts_selected.includes(`${options.title?.text}`)}
 			{#if show}<Line {options} />{/if}
 		{/each}

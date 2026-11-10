@@ -1,4 +1,4 @@
-// import type { Line } from "$lib/interfaces/index";
+// import type { Line } from "#lib/interfaces/index.ts";
 // import { read, utils, type WorkBook, type WorkSheet } from "xlsx";
 // import { writeFile } from "xlsx";
 

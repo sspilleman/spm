@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 import { liveQuery } from 'dexie';
-// import type { Computation, Quote, Rate, Usage } from '$lib/interfaces/index';
-import type { Computation, Quote, Rate } from '$lib/interfaces/index';
+// import type { Computation, Quote, Rate, Usage } from '#lib/interfaces/index.ts';
+import type { Computation, Quote, Rate } from '#lib/interfaces/index.ts';
 
 const db = new Dexie('spm') as Dexie & {
 	rates: EntityTable<Rate, 'id'>;

@@ -1,6 +1,6 @@
-import type { Line } from '$lib/interfaces/index';
+import type { Line } from '#lib/interfaces/index.ts';
 import Excel, { type Row, type Workbook, type Worksheet } from 'exceljs';
-import { cleanName } from '$lib/utils';
+import { cleanName } from '#lib/utils.ts';
 
 const type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 

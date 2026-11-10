@@ -1,15 +1,31 @@
 @import 'tailwindcss';
-@config "../tailwind.config.cjs";
+/* Flowbite design tokens (bg-brand, text-body, ...) used by flowbite-svelte v2 components */
+@import 'flowbite/src/themes/default';
+@plugin 'flowbite/plugin';
 @custom-variant dark (&:where(.dark, .dark *));
 
-@source "../node_modules/svelte-5-ui-lib/dist";
+/* Tailwind does not scan node_modules, so point it at the component library */
+@source '../node_modules/flowbite-svelte/dist';
+
 @import '../static/fonts/titillium/titillium.css';
 @import '../static/fonts/hack/hack.css';
 
+/* Overrides the fonts set by the Flowbite theme, so keep this after its import */
+@theme {
+	--font-sans: Titillium, ui-sans-serif, system-ui, sans-serif;
+	--font-body: Titillium, ui-sans-serif, system-ui, sans-serif;
+	--font-mono: Hack, ui-monospace, monospace;
+	--color-poppy: #ff0051;
+	/* The Flowbite theme enlarges Tailwind's radius scale (rounded = 8px, rounded-lg = 16px).
+	   Restore Tailwind's defaults for our own markup; Flowbite components use rounded-base. */
+	--radius: 0.25rem;
+	--radius-xs: 0.125rem;
+	--radius-sm: 0.25rem;
+	--radius-lg: 0.5rem;
+}
+
 :root {
 	--hoverable-distance: 1.5rem;
-	--default-font-family: Titillium;
-	--font-mono: Hack;
 }
 
 *,
@@ -23,5 +39,5 @@ a:hover {
 }
 
 header a[aria-current='true'] {
-	@apply text-lime-500 font-bold;
+	@apply font-bold text-lime-500;
 }

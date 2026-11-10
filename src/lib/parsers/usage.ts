@@ -1,5 +1,5 @@
-// import type { Usage, UsageSourceColumns } from '$lib/interfaces/index';
-// import { readFile } from '$lib/utils';
+// import type { Usage, UsageSourceColumns } from '#lib/interfaces/index.ts';
+// import { readFile } from '#lib/utils.ts';
 // import * as d3 from 'd3';
 // import { cleanName } from './helpers';
 

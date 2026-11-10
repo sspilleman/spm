@@ -11,41 +11,45 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
-		"date-fns": "^4.1.0",
-		"vite-plugin-devtools-json": "^1.0.0"
+		"date-fns": "4.4.0"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "7.0.0",
-		"@sveltejs/kit": "2.50.0",
-		"@sveltejs/vite-plugin-svelte": "6.2.4",
-		"@tailwindcss/vite": "4.1.18",
+		"@eslint/js": "10.0.1",
+		"@sveltejs/adapter-static": "4.0.1",
+		"@sveltejs/kit": "3.2.0",
+		"@sveltejs/vite-plugin-svelte": "7.3.1",
+		"@tailwindcss/vite": "4.3.5",
 		"@types/d3": "7.4.3",
-		"@types/eslint": "9.6.1",
-		"@types/lodash.merge": "4.6.9",
-		"autoprefixer": "10.4.23",
-		"d3": "7.9.0",
-		"dexie": "4.2.1",
+		"d3": "7.9.2",
+		"dexie": "4.4.7",
+		"eslint": "10.14.0",
 		"eslint-config-prettier": "10.1.8",
-		"eslint-plugin-svelte": "3.14.0",
-		"eslint": "9.39.2",
+		"eslint-plugin-svelte": "3.24.1",
 		"exceljs": "4.4.0",
-		"flowbite": "4.0.1",
-		"globals": "17.0.0",
-		"highcharts": "12.5.0",
-		"iconify-icon": "3.0.2",
-		"lodash.merge": "4.6.2",
-		"prettier-plugin-svelte": "3.4.1",
-		"prettier-plugin-tailwindcss": "0.7.2",
-		"prettier": "3.8.0",
-		"svelte-5-ui-lib": "0.12.6",
-		"svelte-adapter-deno": "0.9.1",
-		"svelte-check": "4.3.5",
-		"svelte": "5.47.1",
-		"sveltekit-adapter-deno": "0.16.1",
-		"tailwindcss": "4.1.18",
-		"typescript-eslint": "8.53.1",
-		"typescript": "5.9.3",
-		"vite": "7.3.1"
+		"flowbite": "4.0.2",
+		"flowbite-svelte": "2.0.0-next.13",
+		"globals": "17.14.0",
+		"highcharts": "13.1.1",
+		"iconify-icon": "3.0.5",
+		"prettier": "3.9.10",
+		"prettier-plugin-svelte": "4.1.1",
+		"prettier-plugin-tailwindcss": "0.8.1",
+		"svelte": "5.57.3",
+		"svelte-check": "4.7.8",
+		"tailwindcss": "4.3.5",
+		"typescript": "6.0.3",
+		"typescript-eslint": "8.72.2",
+		"vite": "8.3.7",
+		"vite-plugin-devtools-json": "1.1.2"
 	},
-	"type": "module"
+	"overrides": {
+		"exceljs": {
+			"uuid": "11.1.1"
+		}
+	},
+	"type": "module",
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
+	}
 }

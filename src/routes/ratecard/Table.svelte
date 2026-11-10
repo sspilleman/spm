@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { ratecard, db } from '$lib/db';
-	import { ButtonGroup, Input, InputAddon } from 'svelte-5-ui-lib';
-	import { displayDate, uomMultiplier } from '$lib/parsers/helpers';
-	import type { Rate } from '$lib/interfaces/index';
+	import { ratecard, db } from '#lib/db.ts';
+	import { ButtonGroup, Input, InputAddon } from 'flowbite-svelte';
+	import { displayDate, uomMultiplier } from '#lib/parsers/helpers.ts';
+	import type { Rate } from '#lib/interfaces/index.ts';
 
 	let ratecardFiltered: Rate[] = $state([]);
 
@@ -39,26 +39,26 @@
 <table class="mt-4 font-mono text-xs">
 	<thead>
 		<tr>
-			<th class="text-left px-2"></th>
-			<th class="text-left px-2">Part</th>
-			<th class="text-left px-2">Name</th>
-			<th class="text-left px-2">UOM</th>
-			<th class="text-left px-2">Price</th>
-			<th class="text-left px-2">Tier</th>
-			<th class="text-left px-2">PPM</th>
-			<th class="text-left px-2">Discount</th>
-			<th class="text-left px-2">Start</th>
-			<th class="text-left px-2">End</th>
+			<th class="px-2 text-left"></th>
+			<th class="px-2 text-left">Part</th>
+			<th class="px-2 text-left">Name</th>
+			<th class="px-2 text-left">UOM</th>
+			<th class="px-2 text-left">Price</th>
+			<th class="px-2 text-left">Tier</th>
+			<th class="px-2 text-left">PPM</th>
+			<th class="px-2 text-left">Discount</th>
+			<th class="px-2 text-left">Start</th>
+			<th class="px-2 text-left">End</th>
 		</tr>
 	</thead>
 	<tbody>
-		{#each ratecardFiltered as rate}
+		{#each ratecardFiltered as rate (rate.id)}
 			{@const quantity = !Number.isNaN(rate['Max Quantity']) ? rate['Max Quantity'] : ''}
 			{@const multiplier = uomMultiplier(rate['UOM'])}
 			<tr>
 				<td class="px-2 py-0" onclick={() => addProduct(rate)}>
 					<iconify-icon
-						class="outline-none text-lime-400"
+						class="text-lime-400 outline-none"
 						icon="mdi:plus-circle-outline"
 						height="20"
 						noobserver

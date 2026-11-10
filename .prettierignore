@@ -2,3 +2,7 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+deno.lock
+
+# Static assets (fonts, sample data, templates)
+/static/

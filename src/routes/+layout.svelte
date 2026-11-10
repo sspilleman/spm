@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	import Header from '$lib/components/Header.svelte';
+	import Header from '#lib/components/Header.svelte';
 	import '../app.css';
 	import 'iconify-icon';
 	interface Props {
@@ -12,7 +12,7 @@
 
 <div class="app">
 	<Header></Header>
-	<main class="p-4 m-0">
+	<main class="m-0 p-4">
 		{@render children()}
 	</main>
 	<footer></footer>

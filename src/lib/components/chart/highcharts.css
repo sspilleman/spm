@@ -173,7 +173,8 @@
 	white-space: nowrap;
 	transition: stroke 150ms;
 }
-.highcharts-tooltip text {
+.highcharts-tooltip text,
+.highcharts-tooltip foreignObject div:not(foreignObject > div) {
 	fill: var(--highcharts-neutral-color-80);
 	font-size: 0.8em;
 }
@@ -239,6 +240,20 @@ g.highcharts-series,
 .highcharts-legend-series-active .highcharts-data-labels:not(.highcharts-series-hover) {
 	opacity: 0.2;
 }
+/* Highcharts 13: points animating out */
+.highcharts-point-condemned {
+	opacity: 0;
+}
+/* Highcharts 13: menu separators */
+.highcharts-separator {
+	border: none;
+	background-color: var(--highcharts-neutral-color-40);
+	height: 0.5px;
+	margin: 10px 0;
+	padding: 0;
+	list-style-type: none;
+	pointer-events: none;
+}
 .highcharts-color-0 {
 	fill: var(--highcharts-color-0);
 	stroke: var(--highcharts-color-0);
@@ -299,6 +314,7 @@ g.highcharts-series,
 	stroke-width: 0;
 }
 .highcharts-data-label text,
+.highcharts-data-label div,
 text.highcharts-data-label {
 	font-size: 0.7em;
 	font-weight: 700;
@@ -425,7 +441,8 @@ text.highcharts-data-label {
 	fill: none;
 	stroke-width: 0;
 }
-.highcharts-legend-item > text {
+.highcharts-legend-item > text,
+.highcharts-legend-item div {
 	fill: var(--highcharts-neutral-color-80);
 	font-weight: 700;
 	font-size: 0.8em;

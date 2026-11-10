@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Table from './Table.svelte';
 	import Proposal from './Proposal.svelte';
-	import { ratecard, quotes } from '$lib/db';
-	import { Heading } from 'svelte-5-ui-lib';
+	import { ratecard, quotes } from '#lib/db.ts';
+	import { Heading } from 'flowbite-svelte';
 </script>
 
 <svelte:head>

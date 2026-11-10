@@ -1,5 +1,5 @@
-import type { Computation, ComputationSourceColumns } from '$lib/interfaces/index';
-import { readFile } from '$lib/utils';
+import type { Computation, ComputationSourceColumns } from '#lib/interfaces/index.ts';
+import { readFile } from '#lib/utils.ts';
 import * as d3 from 'd3';
 import { cleanName, parseYMDDate } from './helpers';
 

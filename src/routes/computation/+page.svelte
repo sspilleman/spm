@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button, Label } from 'svelte-5-ui-lib';
-	import Line from '$lib/components/chart/Line.svelte';
-	import { computation } from '$lib/db';
-	import type { Computation } from '$lib/interfaces/index';
+	import { Button, Label } from 'flowbite-svelte';
+	import Line from '#lib/components/chart/Line.svelte';
+	import { computation } from '#lib/db.ts';
+	import type { Computation } from '#lib/interfaces/index.ts';
 	import type Highcharts from 'highcharts';
 
 	let charts: Record<string, Highcharts.Options> = $state({});
@@ -10,7 +10,6 @@
 	let selectedskus = $state<string[]>([]);
 
 	const createCharts = () => {
-		const start = performance.now();
 		charts = skus.reduce(
 			(prev, sku) => {
 				const records = $computation.filter((u) => u['SKU'] === sku);
@@ -36,12 +35,9 @@
 			},
 			{} as Record<string, Highcharts.Options>
 		);
-		// console.log(`[createCharts] took ${performance.now() - start} milliseconds.`);
 	};
 	const createParts = (records: Computation[]) => {
-		const start = performance.now();
 		skus = [...new Set(records.map((s) => s['SKU']))];
-		// console.log(`[createParts] took ${performance.now() - start} milliseconds.`);
 	};
 
 	// const findChanged = (days: number) => {
@@ -89,25 +85,25 @@
 
 {#if skus && skus.length > 0}
 	<div class="mt-4 flex flex-row flex-wrap gap-2">
-		<Button onclick={() => (selectedskus = [...skus])} size="sm" color="blue">select all</Button>
+		<Button onclick={() => (selectedskus = [...skus])} size="sm" color="brand">select all</Button>
 		<Button onclick={() => (selectedskus = [])} size="sm" color="dark">select none</Button>
-		<!-- <Button on:click={() => findChanged(1)} size="sm" color="green">modified 1 day</Button>
-		<Button on:click={() => findChanged(3)} size="sm" color="green">modified 3 days</Button>
-		<Button on:click={() => findChanged(6)} size="sm" color="green">modified 6 days</Button>
-		<Button on:click={() => findChanged(9)} size="sm" color="green">modified 9 days</Button>
-		<Button on:click={() => findChanged(12)} size="sm" color="green">modified 12 days</Button> -->
+		<!-- <Button onclick={() => findChanged(1)} size="sm" color="success">modified 1 day</Button>
+		<Button onclick={() => findChanged(3)} size="sm" color="success">modified 3 days</Button>
+		<Button onclick={() => findChanged(6)} size="sm" color="success">modified 6 days</Button>
+		<Button onclick={() => findChanged(9)} size="sm" color="success">modified 9 days</Button>
+		<Button onclick={() => findChanged(12)} size="sm" color="success">modified 12 days</Button> -->
 	</div>
 	<ul class="mt-4 flex flex-row flex-wrap">
 		{#each skus as sku (sku)}
-			<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600 w-96">
+			<li class="w-96 rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
 				<Label
-					class="text-sm rtl:text-right font-medium text-gray-900 dark:text-gray-300 flex items-center"
+					class="flex items-center text-sm font-medium text-gray-900 rtl:text-right dark:text-gray-300"
 				>
 					<input
 						bind:group={selectedskus}
 						type="checkbox"
 						value={sku}
-						class="w-4 h-4 bg-gray-100 border-gray-300 dark:ring-offset-gray-800 focus:ring-2 me-2 dark:bg-gray-700 dark:border-gray-600 rounded text-lime-400 focus:ring-lime-400 dark:focus:ring-lime-400"
+						class="me-2 h-4 w-4 rounded border-gray-300 bg-gray-100 text-lime-400 focus:ring-2 focus:ring-lime-400 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-lime-400"
 					/>
 					{name(sku)}
 				</Label>
@@ -117,7 +113,7 @@
 {/if}
 
 <div class="mt-4 flex flex-row flex-wrap gap-4">
-	{#each selectedskus as sku}
+	{#each selectedskus as sku (sku)}
 		{@const options = charts[sku]}
 		<Line {options} />
 	{/each}

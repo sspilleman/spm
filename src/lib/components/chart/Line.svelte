@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Chart from './Chart.svelte';
-	import merge from 'lodash.merge';
-	import type Highcharts from 'highcharts';
+	import Highcharts from 'highcharts';
 
 	interface Props {
 		options: Highcharts.Options;
@@ -22,7 +21,7 @@
 			series: {
 				step: 'left',
 				animation: false,
-				marker: { enabled: false },
+				marker: { enabled: false }
 				// events: { click: (e) => console.log(e) }
 			}
 		},
@@ -36,7 +35,8 @@
 			crosshair: true
 		}
 	};
-	const combined: Highcharts.Options = merge(options, defaultOptions);
+	// Highcharts.merge returns a new object (lodash.merge mutated `options`); later arguments win.
+	const combined: Highcharts.Options = $derived(Highcharts.merge(options, defaultOptions));
 </script>
 
 <Chart options={combined}></Chart>

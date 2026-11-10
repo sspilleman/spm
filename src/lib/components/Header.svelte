@@ -1,11 +1,12 @@
 <script lang="ts">
-	// import { parseRatecard, parseUsage, parseComputation } from '$lib/parsers/index';
-	import { parseRatecard, parseComputation } from '$lib/parsers/index';
-	// import { usage, ratecard, db, computation } from '$lib/db';
-	import { ratecard, db, computation } from '$lib/db';
-	import { Indicator, Darkmode } from 'svelte-5-ui-lib';
+	// import { parseRatecard, parseUsage, parseComputation } from '#lib/parsers/index.ts';
+	import { parseRatecard, parseComputation } from '#lib/parsers/index.ts';
+	// import { usage, ratecard, db, computation } from '#lib/db.ts';
+	import { ratecard, db, computation } from '#lib/db.ts';
+	import { Indicator, DarkMode } from 'flowbite-svelte';
 	import { page } from '$app/state';
-	import Logo from '$lib/components/Logo.svelte';
+	import { resolve } from '$app/paths';
+	import Logo from '#lib/components/Logo.svelte';
 
 	const accept = `text/csv`;
 
@@ -44,17 +45,16 @@
 		{ id: '/ratecard', name: 'Ratecard' },
 		// { id: '/usage', name: 'Usage' },
 		{ id: '/computation', name: 'Computation' }
-	];
+	] as const;
 </script>
 
-<header class="w-full flex flex-row gap-4 items-center p-3">
+<header class="flex w-full flex-row items-center gap-4 p-3">
 	<div class="w-10">
 		<Logo />
 	</div>
 	<div class="mr-16 flex flex-row gap-4">
-		{#each routes as route}
-			{@const href = route.id}
-			<a aria-current={page.route.id === href} {href}>{route.name}</a>
+		{#each routes as route (route.id)}
+			<a aria-current={page.route.id === route.id} href={resolve(route.id)}>{route.name}</a>
 		{/each}
 	</div>
 	<div class="text-white">loaded:</div>
@@ -85,5 +85,5 @@
 	<div class="grow">
 		<input {accept} class="w-full" type="file" multiple onchange={(e) => change(e.target)} />
 	</div>
-	<Darkmode />
+	<DarkMode />
 </header>
