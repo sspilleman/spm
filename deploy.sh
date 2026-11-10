@@ -4,12 +4,16 @@
 # and asks before it commits.
 #
 # Usage: ./deploy.sh [-y]    -y skips the question
+#
+# The package.json scripts run with "deno task" by default. Set RUN to use another
+# runner, for example: RUN="npm run" ./deploy.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 
-deno task lint
-deno task check
-deno task build
+RUN="${RUN:-deno task}"
+$RUN lint
+$RUN check
+$RUN build
 
 git add -A
 if git diff --cached --quiet; then

@@ -1,2 +1,2 @@
-export { parseComputation } from './computation';
-export { parseRatecard } from './ratecard';
+export { parseComputation } from './computation.ts';
+export { parseRatecard } from './ratecard.ts';

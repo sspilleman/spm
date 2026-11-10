@@ -3,7 +3,7 @@
 	import { rateStatus, statusLabel, uomMultiplier } from '#lib/parsers/helpers.ts';
 	import { Button } from 'flowbite-svelte';
 	import type { Rate, Line, Quote } from '#lib/interfaces/index.ts';
-	import { exportToXls } from './exceljs';
+	import { exportToXls } from './exceljs.ts';
 	import Icon from '#lib/components/Icon.svelte';
 
 	// quote id -> the quantity being typed, for lines that are in edit mode

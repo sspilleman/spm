@@ -1,7 +1,7 @@
 import type { Rate, RateSourceColumns } from '#lib/interfaces/index.ts';
 import { readFile } from '#lib/utils.ts';
 import * as d3 from 'd3';
-import { cleanName, dropTrailer, newDate, parseQuantity } from './helpers';
+import { cleanName, dropTrailer, newDate, parseQuantity } from './helpers.ts';
 
 const rowCoverter = (r: d3.DSVRowString<RateSourceColumns>) => {
 	const row = {
