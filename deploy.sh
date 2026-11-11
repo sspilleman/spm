@@ -13,6 +13,7 @@ cd "$(dirname "$0")"
 RUN="${RUN:-deno task}"
 $RUN lint
 $RUN check
+$RUN test
 $RUN build
 
 git add -A

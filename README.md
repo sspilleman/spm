@@ -220,7 +220,9 @@ src/
     ├── ratecard/               Table (lookup), Proposal, ExcelJS export
     └── computation/            per-SKU cost charts
 static/                         sample CSVs, Excel template, fonts, icons
+tests/                          Vitest tests for the parsers and helpers
 vite.config.ts                  Vite + SvelteKit config (adapter, preprocess); there is no svelte.config.js
+vitest.config.ts                Vitest config (tests only, without the SvelteKit plugins)
 deno.json                       Deno's minimum dependency age setting
 ```
 
@@ -265,11 +267,23 @@ Code in `src/lib` is imported through the `#lib` subpath import declared in `pac
 | `deno task preview`     | Serve the production build on port 4000                  |
 | `deno task check`       | Run `svelte-kit sync` and `svelte-check` for type errors |
 | `deno task check:watch` | Same, in watch mode                                      |
+| `deno task test`        | Run the Vitest tests once                                |
 | `deno task lint`        | Run `prettier --check` and `eslint`                      |
 | `deno task format`      | Run `prettier --write` to format the code                |
 | `deno audit`            | Check the lockfile for known vulnerabilities             |
 
-The project has no automated tests.
+### Tests
+
+`tests/` holds [Vitest](https://vitest.dev/) tests for the pure code: the two parsers, the helpers in `src/lib/parsers/helpers.ts` (UOM multipliers, dates, quantities, rate status, name cleanup) and `src/lib/utils.ts`. They are characterization tests: they record what the code does today, so that a change of package manager or runtime, or a refactor, shows up as a failing test. The sample exports in `static/` are the fixtures.
+
+- The tests run in plain Node (or Deno, or another runtime that runs Vitest), without a browser or jsdom. The parsers take a `File`, which these runtimes provide.
+- Fixtures are loaded with Vite's `?raw` import, so the tests use no file system API.
+- `vitest.config.ts` is separate from `vite.config.ts`, so the tests run without the SvelteKit, Tailwind and devtools plugins.
+- `deno task check` type-checks the tests too.
+- Dexie, the Excel export and the Svelte components are not tested.
+- Six tests, in a `known bugs` block at the end of the test files, are marked `it.fails`. Each states the correct result for a bug that is not fixed yet, so Vitest reports them as "expected fail" and the run stays green. When a fix makes one pass, Vitest reports that as a failure; change `it.fails` to `it` with the fix.
+
+`npm run test` runs the same tests against the `node_modules` that `deno install` created.
 
 Code style follows Prettier: tabs, single quotes, no trailing commas and a print width of 100. `prettier-plugin-tailwindcss` sorts the Tailwind classes.
 
@@ -289,7 +303,7 @@ The app builds to a **static single-page app** with [`@sveltejs/adapter-static`]
 
 1. checks out the repo and installs Deno 2.9.8
 2. runs `deno install --frozen`, which fails if `deno.lock` is out of date
-3. runs `deno task lint`, `deno task check` and `deno task build`
+3. runs `deno task lint`, `deno task check`, `deno task test` and `deno task build`
 4. uploads `build/` as the workflow artifact **`spm-site`**
 
 The workflow does not deploy. To publish a build, copy the contents of `build/` (or the `spm-site` artifact) to your web server. The server must send any path that isn't a real file to `200.html`, so that client-side routes such as `/ratecard` work after a reload. With nginx:
@@ -311,7 +325,7 @@ deno task build
 deno task preview
 ```
 
-`deploy.sh` is a shortcut for publishing the source. It runs lint, type check and build, stages everything, lists what it is about to publish and asks for confirmation, then commits with a timestamp as the message and pushes to `origin`. `./deploy.sh -y` skips the question. It stops at the first failing step.
+`deploy.sh` is a shortcut for publishing the source. It runs lint, type check, tests and build, stages everything, lists what it is about to publish and asks for confirmation, then commits with a timestamp as the message and pushes to `origin`. `./deploy.sh -y` skips the question. It stops at the first failing step.
 
 > The app used to run on Deno Deploy Classic with `svelte-adapter-deno`. Deno shut Deploy Classic down on 2026-07-20, and neither Deno adapter supports SvelteKit 3.
 

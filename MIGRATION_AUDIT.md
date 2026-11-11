@@ -18,15 +18,18 @@ The brief's premise that Deno support ends around October 2027 was taken as give
 
 Sections 1 to 6 describe the repo as it was before Phase 2. This section records what has changed since.
 
-| Step                                       | Status          | Change                          |
-| ------------------------------------------ | --------------- | ------------------------------- |
-| 1. `.ts` on extensionless relative imports | Done 2026-11-10 | 8 specifiers in 5 files         |
-| 2. Lint guard                              | Done 2026-11-10 | New block in `eslint.config.js` |
-| 3. Runner variable in `deploy.sh`          | Done 2026-11-10 | `RUN`, default `deno task`      |
-| 4. Second runtime in CI                    | Not started     | Waits for a decision            |
-| Lockfile, CI action, docs                  | Not started     | Waits for the tool decision     |
+| Step                                       | Status          | Change                              |
+| ------------------------------------------ | --------------- | ----------------------------------- |
+| 1. `.ts` on extensionless relative imports | Done 2026-11-10 | 8 specifiers in 5 files             |
+| 2. Lint guard                              | Done 2026-11-10 | New block in `eslint.config.js`     |
+| 3. Runner variable in `deploy.sh`          | Done 2026-11-10 | `RUN`, default `deno task`          |
+| 4. Second runtime in CI                    | Not started     | Waits for a decision                |
+| Lockfile, CI action, docs                  | Not started     | Waits for the tool decision         |
+| Tests                                      | Done 2026-11-11 | Vitest 5.1.0, 115 tests in `tests/` |
 
 After each step, `deno task lint`, `deno task check` and `deno task build` passed.
+
+**Tests.** Vitest 5.1.0 (peer range `vite ^6.4 || ^7 || ^8`) was added as a dev dependency with `deno install`; it added 15 packages to `deno.lock` and no `deno audit` advisories. `deno task test` and `npm run test` both pass 109 tests against the same `node_modules`, plus 6 known-bug tests marked `it.fails` that are expected to fail, and they also pass with `TZ` set to UTC, America/Los_Angeles, Asia/Kolkata and Pacific/Kiritimati. The tests are in `tests/`, outside the `src/**` lint guard, and read the sample CSVs with Vite's `?raw` import instead of `node:fs`, so they use no runtime-specific API. They run in CI after the type check and in `deploy.sh` through `$RUN test`. From now on `deno task test` is part of the gate for each step. No file in `src/` was changed.
 
 **Step 1.** The build output is byte-identical to the build before the change, apart from the two timestamp files (`200.html`, `_app/version.json`). `src/` now has no relative import without an extension. The Svelte autofixer reported no issues for `Proposal.svelte`.
 

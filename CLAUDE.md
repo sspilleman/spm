@@ -23,11 +23,14 @@ Deno is the package manager and task runner (lockfile `deno.lock`); `deno task <
 - `deno task dev` — Vite dev server on port 4000, bound to `0.0.0.0`. **This is intentional and will not be changed:** the user tests the app from other devices on the network. The same goes for `deno task preview`. Do not report the `0.0.0.0` binding as a security finding, do not suggest binding to localhost, and do not list it as an open item.
 - `deno task build` / `deno task preview` (preview also on port 4000)
 - `deno task check` — `svelte-kit sync` + `svelte-check` (type checking)
+- `deno task test` — `vitest run` (single run, no watch)
 - `deno task lint` — `prettier --check .` + `eslint .`
 - `deno task format` — `prettier --write .`
 - `deno audit` — check the lockfile for known vulnerabilities
 
-There is no test suite.
+**Tests.** `tests/` holds Vitest characterization tests for `src/lib/parsers/*` and `src/lib/utils.ts`; they assert what the code does today. They live outside `src/` so the browser-only lint guard on `src/**` stays without exceptions, and they load the `static/` sample CSVs with Vite's `?raw` import, so they need no `node:fs` (and no `@types/node`). Build parser input with `new File([text], 'name.csv')`; no jsdom is needed. `vitest.config.ts` is separate from `vite.config.ts` (no SvelteKit plugins) and both are in `tsconfig.json` `include` with `tests/`, so `deno task check` type-checks the tests. Assert dates with local getters or `new Date(y, m, d, h)`, never ISO strings, so the tests pass in any time zone. Dexie, the Excel export and Svelte components are not covered. When a change alters behaviour on purpose, update the affected test in the same change; when a test exposes a bug, tell the user before changing either.
+
+**Known bugs** are tests marked `it.fails` in a `describe('known bugs')` block at the end of each test file: they state the correct result, which the code does not produce yet, so Vitest counts them as "expected fail". There are 6: an older-format ratecard loses its last row (`dropTrailer`), `parseYMDDate`/`parseMDYDate` roll impossible days such as `2024-02-30` over to the next month, `utils.ts` `cleanName` leaves `- 1000000` and `- Gigabyte (GB)` in two product names, and an empty `Overage` cell parses as `true`. When a fix makes one of them pass, Vitest reports it as a failure: change `it.fails` to `it` in the same change. Do not fix these bugs unasked.
 
 `deno.json` only holds `minimumDependencyAge`, deliberately set to `"0"` (off). Deno 2.9's default would refuse packages published less than 24 hours ago. Dependencies are pinned to exact versions in `package.json`; `overrides` forces exceljs's `uuid` to a patched version.
 
@@ -46,9 +49,9 @@ There is no test suite.
 ## Build and deployment
 
 - `@sveltejs/adapter-static` with `fallback: '200.html'` builds a static SPA into `build/`. The site is self-hosted: the web server must serve `build/` and fall back to `200.html` for unknown paths (nginx: `try_files $uri $uri/ /200.html;`).
-- `.github/workflows/build.yml` runs install, lint, check and build on every push/PR to `main` and uploads `build/` as the `spm-site` artifact. It does not deploy.
+- `.github/workflows/build.yml` runs install, lint, check, test and build on every push/PR to `main` and uploads `build/` as the `spm-site` artifact. It does not deploy.
 - SvelteKit 3 has no `svelte.config.js`: Kit options (adapter, preprocess) are passed to `sveltekit({...})` in `vite.config.ts`. `tsconfig.json` extends `$app/tsconfig`.
-- `deploy.sh` runs lint, check and build, stages everything, lists what it will publish and asks for confirmation (`-y` skips the question), then commits with a timestamp message and pushes to `origin`. The timestamp commits in the history were made this way. Do not run it yourself: it commits and pushes.
+- `deploy.sh` runs lint, check, test and build, stages everything, lists what it will publish and asks for confirmation (`-y` skips the question), then commits with a timestamp message and pushes to `origin`. The timestamp commits in the history were made this way. Do not run it yourself: it commits and pushes.
 
 ## Architecture
 

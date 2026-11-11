@@ -33,6 +33,9 @@ jobs:
       - name: Type check
         run: deno task check
 
+      - name: Test
+        run: deno task test
+
       - name: Build
         run: deno task build
 
